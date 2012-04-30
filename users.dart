@@ -45,7 +45,8 @@ class _Users extends _Endpoint {
   }
 
   _GetRequest mayorships([String userId='self', Map<String, String> params]) {
-    return _requestFactory.build('GET', '$_endpoint/$userId/mayorships', params);
+    return _requestFactory.build('GET', '$_endpoint/$userId/mayorships',
+        params);
   }
 
   _GetRequest photos([String userId='self', Map<String, String> params]) {
@@ -61,7 +62,8 @@ class _Users extends _Endpoint {
   }
 
   _GetRequest venuehistory([String userId='self', Map<String, String> params]) {
-    return _requestFactory.build('GET', '$_endpoint/$userId/venuehistory', params);
+    return _requestFactory.build('GET', '$_endpoint/$userId/venuehistory',
+        params);
   }
 
   /*

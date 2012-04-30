@@ -10,7 +10,6 @@
 #source('checkins.dart');
 
 class Foursquare {
-  String _accessToken;
   _RequestFactory _requestFactory;
   String _clientId;
 
@@ -19,11 +18,13 @@ class Foursquare {
     this._clientId = clientId;
   }
 
+  /* Not currently implemented because OAuth 2.0 library does not work.
   void login([VoidCallback successCallback]) {
-    AuthRequest req = new AuthRequest('https://foursquare.com/oauth2/authenticate', _clientId);
+    AuthRequest req = new AuthRequest(
+        'https://foursquare.com/oauth2/authenticate', _clientId);
     new Auth().login(req,
       successCallback: (String accessToken) {
-        _requestFactory._accessToken = accessToken;
+        this.accessToken = accessToken;
 
         if (successCallback != null) {
           successCallback();
@@ -32,11 +33,34 @@ class Foursquare {
       errorCallback: (AuthError e) {
         window.alert(e.error);
       });
+  } */
+
+  String get accessToken() => this._requestFactory._accessToken;
+         set accessToken(value) => this._requestFactory._accessToken = value;
+
+  _Users _users;
+  _Users get users() {
+    if (_users == null) {
+      _users = new _Users(_requestFactory);
+    }
+    return _users;
   }
 
-  _Users get users() => new _Users(_requestFactory);
-  _Venues get venues() => new _Venues(_requestFactory);
-  _Checkins get checkins() => new _Checkins(_requestFactory);
+  _Venues _venues;
+  _Venues get venues() {
+    if (_venues == null) {
+      _venues = new _Venues(_requestFactory);
+    }
+    return _venues;
+  }
+
+  _Checkins _checkins;
+  _Checkins get checkins() {
+    if (_checkins == null) {
+      new _Checkins(_requestFactory);
+    }
+    return _checkins;
+  }
 }
 
 abstract class _Endpoint {
@@ -58,8 +82,7 @@ class _RequestFactory {
   }
 
   _Request build(String method, String path, [Map<String, String> params]) {
-    String paramsStr = _paramsStr(params);
-    String url = '$_API_ENDPOINT/$path?$paramsStr';
+    String url = '$_API_ENDPOINT/$path?${_paramsStr(params)}';
     switch (method) {
       case 'GET':
         return new _GetRequest(url);
@@ -78,8 +101,7 @@ class _RequestFactory {
     }
     if (params != null) {
       params.forEach((String key, String val) {
-        String encodedValue = encodeURIComponent(val);
-        parts.add('$key=$encodedValue');
+        parts.add('$key=${encodeURIComponent(val)}');
       });
     }
     return Strings.join(parts, '&');
@@ -104,27 +126,33 @@ abstract class _Request {
     xhr.send();
   }
 
-  abstract void execute([SuccessCallback successCallback, FailureCallback failureCallback]);
+  abstract void execute([SuccessCallback successCallback,
+      FailureCallback failureCallback]);
 }
 
 class _GetRequest extends _Request {
   final String url;
+  final String method = 'GET';
 
   _GetRequest(this.url);
 
-  void execute([SuccessCallback successCallback, FailureCallback failureCallback]) {
-    _doExecute(this.url, 'GET', successCallback: successCallback, failureCallback: failureCallback);
+  void execute([SuccessCallback successCallback,
+      FailureCallback failureCallback]) {
+    _doExecute(url, method, successCallback: successCallback,
+      failureCallback: failureCallback);
   }
 }
 
 class _PostRequest extends _Request {
   final String url;
+  final String method = 'POST';
   final Map<String, String> params;
 
   _PostRequest(this.url, [this.params=null]);
 
-  void execute([SuccessCallback successCallback, FailureCallback failureCallback]) {
-    _doExecute(this.url, 'POST', params: params, successCallback: successCallback,
+  void execute([SuccessCallback successCallback,
+      FailureCallback failureCallback]) {
+    _doExecute(url, method, params: params, successCallback: successCallback,
       failureCallback: failureCallback);
   }
 }

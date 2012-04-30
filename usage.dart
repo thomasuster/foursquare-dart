@@ -10,17 +10,24 @@ main() {
 
   });
 
-  fsq.login(successCallback: () {
-    // Demonstrates GET request
-    fsq.users.leaderboard({
-      'foo': 'bar'
-    }).execute(successCallback: (Object o) {
+  fsq.accessToken = 'foobarbaz';
 
-    });
+  // Demonstrates GET request
+  fsq.users.leaderboard({
+    'foo': 'bar'
+  }).execute(successCallback: (Object o) {
 
-    // Demonstrates POST request and required param
-    fsq.users.approve('abcdefg').execute(successCallback: (Object o) {
-
-    });
   });
+
+  // Demonstrates POST request and required param
+  fsq.users.approve('abcdefg').execute(successCallback: (Object o) {
+
+  });
+
+  // Demonstrates top-level "get" method
+  /* Not functional
+  _Venues v = fsq.venues('venue-id').execute(successCallback: (Object o) {
+
+  });
+  */
 }

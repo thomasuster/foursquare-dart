@@ -8,6 +8,10 @@ class _Venues extends _Endpoint {
    * General
    */
 
+  _GetRequest operator call(String venueId) {
+    return get(venueId);
+  }
+
   _GetRequest get(String venueId) {
     return _requestFactory.build('GET', '$_endpoint/$venueId');
   }
@@ -97,10 +101,12 @@ class _Venues extends _Endpoint {
   }
 
   _PostRequest proposeedit(String venueId, Map<String, String> params) {
-    return _requestFactory.build('POST', '$_endpoint/$venueId/proposeedit', params);
+    return _requestFactory.build('POST', '$_endpoint/$venueId/proposeedit',
+        params);
   }
 
   _PostRequest marktodo(String venueId, Map<String, String> params) {
-    return _requestFactory.build('POST', '$_endpoint/$venueId/marktodo', params);
+    return _requestFactory.build('POST', '$_endpoint/$venueId/marktodo',
+        params);
   }
 }
