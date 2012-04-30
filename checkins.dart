@@ -1,8 +1,8 @@
-class _Checkins {
-  final String _endpoint = 'venues';
+class Checkins {
+  final String endpoint = 'venues';
   final RequestFactory _requestFactory;
 
-  _Checkins(this._requestFactory);
+  Checkins(this._requestFactory);
 
   /*
    * General
@@ -13,7 +13,7 @@ class _Checkins {
     Map<String, String> params = _combine({
       'signature': signature,
     }, additional);
-    return _requestFactory.build('GET', '$_endpoint/$checkinId', params);
+    return _requestFactory.build('GET', '$endpoint/$checkinId', params);
   }
 
   Request recent([String ll, int limit, int afterTimestamp,
@@ -23,15 +23,19 @@ class _Checkins {
       'limit': limit.toString(),
       'afterTimestamp': afterTimestamp.toString(),
     }, additional);
-    return _requestFactory.build('GET', '$_endpoint/recent', params);
+    return _requestFactory.build('GET', '$endpoint/recent', params);
   }
+
+  /*
+   * Actions
+   */
 
   Request addcomment(String checkinId, String text,
       [Map<String, String> additional]) {
     Map<String, String> params = _combine({
       'text': text,
     }, additional);
-    return _requestFactory.build('POST', '$_endpoint/$checkinId/addcomment',
+    return _requestFactory.build('POST', '$endpoint/$checkinId/addcomment',
         params);
   }
 
@@ -40,7 +44,7 @@ class _Checkins {
     Map<String, String> params = _combine({
       'commentId': commentId,
     }, additional);
-    return _requestFactory.build('POST', '$_endpoint/$checkinId/deletecomment',
+    return _requestFactory.build('POST', '$endpoint/$checkinId/deletecomment',
         params);
   }
 }

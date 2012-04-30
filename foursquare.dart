@@ -40,21 +40,21 @@ class Foursquare {
 
   RequestFactory get requestFactory() => this._requestFactory;
 
-  _Users _users;
-  _Users get users() {
-    if (_users == null) _users = new _Users(_requestFactory);
+  Users _users;
+  Users get users() {
+    if (_users == null) _users = new Users(_requestFactory);
     return _users;
   }
 
-  _Venues _venues;
-  _Venues get venues() {
-    if (_venues == null) _venues = new _Venues(_requestFactory);
+  Venues _venues;
+  Venues get venues() {
+    if (_venues == null) _venues = new Venues(_requestFactory);
     return _venues;
   }
 
-  _Checkins _checkins;
-  _Checkins get checkins() {
-    if (_checkins == null) new _Checkins(_requestFactory);
+  Checkins _checkins;
+  Checkins get checkins() {
+    if (_checkins == null) _checkins = new Checkins(_requestFactory);
     return _checkins;
   }
 }

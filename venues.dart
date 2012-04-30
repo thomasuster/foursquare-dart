@@ -1,19 +1,15 @@
-class _Venues {
-  final String _endpoint = 'venues';
+class Venues{
+  final String endpoint = 'venues';
   final RequestFactory _requestFactory;
 
-  _Venues(this._requestFactory);
+  Venues(this._requestFactory);
 
   /*
    * General
    */
 
-  Request operator call(String venueId, [Map<String, String> additional]) {
-    return get(venueId, additional);
-  }
-
   Request get(String venueId, [Map<String, String> additional]) {
-    return _requestFactory.build('GET', '$_endpoint/$venueId', additional);
+    return _requestFactory.build('GET', '$endpoint/$venueId', additional);
   }
 
   Request add([String address, String crossStreet, String city,
@@ -36,11 +32,11 @@ class _Venues {
       'ignoreDuplicates': ignoreDuplicates.toString(),
       'ignoreDuplicatesKey': ignoreDuplicatesKey,
     }, additional);
-    return _requestFactory.build('POST', '$_endpoint/add', params);
+    return _requestFactory.build('POST', '$endpoint/add', params);
   }
 
   Request categories([Map<String, String> additional]) {
-    return _requestFactory.build('GET', '$_endpoint/categories', additional);
+    return _requestFactory.build('GET', '$endpoint/categories', additional);
   }
 
   Request explore([String ll, String near, num llAcc, int alt, num altAcc,
@@ -59,11 +55,11 @@ class _Venues {
       'intent': intent,
       'novelty': novelty,
     }, additional);
-    return _requestFactory.build('GET', '$_endpoint/explore', params);
+    return _requestFactory.build('GET', '$endpoint/explore', params);
   }
 
   Request managed([Map<String, String> additional]) {
-    return _requestFactory.build('GET', '$_endpoint/managed', additional);
+    return _requestFactory.build('GET', '$endpoint/managed', additional);
   }
 
   Request search([String ll, String near, num llAcc, int alt, num altAcc,
@@ -87,7 +83,7 @@ class _Venues {
       'providerId': providerId,
       'linkedId': linkedId.toString(),
     }, additional);
-    return _requestFactory.build('GET', '$_endpoint/search', params);
+    return _requestFactory.build('GET', '$endpoint/search', params);
   }
 
   Request suggestcompletion(String ll, [num llAcc, int alt, num altAcc,
@@ -100,7 +96,7 @@ class _Venues {
       'query': query,
       'limit': limit.toString(),
     }, additional);
-    return _requestFactory.build('GET', '$_endpoint/suggestcompletion', params);
+    return _requestFactory.build('GET', '$endpoint/suggestcompletion', params);
   }
 
   Request timeseries(String venueId, [int startAt, int endAt,
@@ -110,7 +106,7 @@ class _Venues {
       'startAt': startAt.toString(),
       'endAt': endAt.toString(),
     }, additional);
-    return _requestFactory.build('GET', '$_endpoint/timeseries', params);
+    return _requestFactory.build('GET', '$endpoint/timeseries', params);
   }
 
   Request trending(String ll, [int limit, int radius,
@@ -120,7 +116,7 @@ class _Venues {
       'limit': limit.toString(),
       'radius': radius.toString(),
     }, additional);
-    return _requestFactory.build('GET', '$_endpoint/trending', params);
+    return _requestFactory.build('GET', '$endpoint/trending', params);
   }
 
   /*
@@ -128,7 +124,7 @@ class _Venues {
    */
 
   Request events(String venueId, [Map<String, String> additional]) {
-    return _requestFactory.build('GET', '$_endpoint/$venueId/events',
+    return _requestFactory.build('GET', '$endpoint/$venueId/events',
         additional);
   }
 
@@ -139,11 +135,11 @@ class _Venues {
       'offset': offset.toString(),
       'afterTimestamp': afterTimestamp.toString(),
     }, additional);
-    return _requestFactory.build('GET', '$_endpoint/$venueId/herenow', params);
+    return _requestFactory.build('GET', '$endpoint/$venueId/herenow', params);
   }
 
   Request links(String venueId, [Map<String, String> additional]) {
-    return _requestFactory.build('GET', '$_endpoint/$venueId/links',
+    return _requestFactory.build('GET', '$endpoint/$venueId/links',
         additional);
   }
 
@@ -154,11 +150,11 @@ class _Venues {
       'limit': limit.toString(),
       'offset': offset.toString(),
     }, additional);
-    return _requestFactory.build('GET', '$_endpoint/$venueId/listed', params);
+    return _requestFactory.build('GET', '$endpoint/$venueId/listed', params);
   }
 
   Request menu(String venueId, [Map<String, String> additional]) {
-    return _requestFactory.build('GET', '$_endpoint/$venueId/menu', additional);
+    return _requestFactory.build('GET', '$endpoint/$venueId/menu', additional);
   }
 
   Request photos(String venueId, String group, [int limit, int offset,
@@ -168,11 +164,11 @@ class _Venues {
       'limit': limit.toString(),
       'offset': offset.toString(),
     }, additional);
-    return _requestFactory.build('GET', '$_endpoint/$venueId/photos', params);
+    return _requestFactory.build('GET', '$endpoint/$venueId/photos', params);
   }
 
   Request similar(String venueId, [Map<String, String> additional]) {
-    return _requestFactory.build('GET', '$_endpoint/$venueId/similar',
+    return _requestFactory.build('GET', '$endpoint/$venueId/similar',
         additional);
   }
 
@@ -182,7 +178,7 @@ class _Venues {
       'startAt': startAt.toString(),
       'endAt': endAt.toString(),
     }, additional);
-    return _requestFactory.build('GET', '$_endpoint/$venueId/stats', params);
+    return _requestFactory.build('GET', '$endpoint/$venueId/stats', params);
   }
 
   Request tips(String venueId, [String sort, int limit, int offset,
@@ -192,7 +188,7 @@ class _Venues {
       'limit': limit.toString(),
       'offset': offset.toString(),
     }, additional);
-    return _requestFactory.build('GET', '$_endpoint/$venueId/tips', params);
+    return _requestFactory.build('GET', '$endpoint/$venueId/tips', params);
   }
 
   /*
@@ -217,11 +213,11 @@ class _Venues {
       'description': description,
       'url': url,
     }, additional);
-    return _requestFactory.build('POST', '$_endpoint/$venueId/edit', params);
+    return _requestFactory.build('POST', '$endpoint/$venueId/edit', params);
   }
 
   Request flag(String venueId, [Map<String, String> additional]) {
-    return _requestFactory.build('POST', '$_endpoint/$venueId/flag',
+    return _requestFactory.build('POST', '$endpoint/$venueId/flag',
         additional);
   }
 
@@ -230,7 +226,7 @@ class _Venues {
     Map<String, String> params = _combine({
       'text': text,
     }, additional);
-    return _requestFactory.build('POST', '$_endpoint/$venueId/marktodo',
+    return _requestFactory.build('POST', '$endpoint/$venueId/marktodo',
         params);
   }
 
@@ -248,7 +244,7 @@ class _Venues {
       'll': ll,
       'primaryCategoryId': primaryCategoryId,
     }, additional);
-    return _requestFactory.build('POST', '$_endpoint/$venueId/proposeedit',
+    return _requestFactory.build('POST', '$endpoint/$venueId/proposeedit',
         params);
   }
 }
