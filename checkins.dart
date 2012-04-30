@@ -8,7 +8,10 @@ class _Checkins extends _Endpoint {
    * General
    */
 
-  _GetRequest get(String checkinId) {
-    return _requestFactory.build('GET', '$_endpoint/$checkinId');
+  _GetRequest get(String checkinId, [String signature, Map<String, String> additional]) {
+    Map<String, String> params = _combine({
+      'signature': signature,
+    }, additional);
+    return _requestFactory.build('GET', '$_endpoint/$checkinId', params);
   }
 }

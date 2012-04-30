@@ -13,9 +13,10 @@ main() {
   fsq.accessToken = 'foobarbaz';
 
   // Demonstrates GET request
-  fsq.users.leaderboard({
-    'foo': 'bar'
-  }).execute(successCallback: (Object o) {
+  fsq.users.leaderboard(neighbors: 123,
+    additional: {
+      'foo': 'bar'
+    }).execute(successCallback: (Object o) {
 
   });
 

@@ -66,6 +66,23 @@ class Foursquare {
 abstract class _Endpoint {
   final String _endpoint;
   final _RequestFactory _requestFactory;
+
+  Map<String, String> _combine(Map<String, String> first,
+      Map<String, String> second) {
+    if (first.isEmpty()) {
+      return second;
+    } else if (second.isEmpty()) {
+      return first;
+    }
+    Map<String, String> m = new Map();
+    first.forEach((String k, String v) {
+      m[k] = v;
+    });
+    second.forEach((String k, String v) {
+      m[k] = v;
+    });
+    return m;
+  }
 }
 
 class _RequestFactory {
