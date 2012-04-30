@@ -10,11 +10,11 @@
 #source('checkins.dart');
 
 class Foursquare {
-  _RequestFactory _requestFactory;
+  RequestFactory _requestFactory;
   String _clientId;
 
   Foursquare(String clientId, [String clientSecret]) {
-    this._requestFactory = new _RequestFactory(clientId, clientSecret);
+    this._requestFactory = new RequestFactory(clientId, clientSecret);
     this._clientId = clientId;
   }
 
@@ -38,54 +38,45 @@ class Foursquare {
   String get accessToken() => this._requestFactory._accessToken;
          set accessToken(value) => this._requestFactory._accessToken = value;
 
+  RequestFactory get requestFactory() => this._requestFactory;
+
   _Users _users;
   _Users get users() {
-    if (_users == null) {
-      _users = new _Users(_requestFactory);
-    }
+    if (_users == null) _users = new _Users(_requestFactory);
     return _users;
   }
 
   _Venues _venues;
   _Venues get venues() {
-    if (_venues == null) {
-      _venues = new _Venues(_requestFactory);
-    }
+    if (_venues == null) _venues = new _Venues(_requestFactory);
     return _venues;
   }
 
   _Checkins _checkins;
   _Checkins get checkins() {
-    if (_checkins == null) {
-      new _Checkins(_requestFactory);
-    }
+    if (_checkins == null) new _Checkins(_requestFactory);
     return _checkins;
   }
 }
 
-abstract class _Endpoint {
-  final String _endpoint;
-  final _RequestFactory _requestFactory;
-
-  Map<String, String> _combine(Map<String, String> first,
-      Map<String, String> second) {
-    if (first.isEmpty()) {
-      return second;
-    } else if (second.isEmpty()) {
-      return first;
-    }
-    Map<String, String> m = new Map();
-    first.forEach((String k, String v) {
-      m[k] = v;
-    });
-    second.forEach((String k, String v) {
-      m[k] = v;
-    });
-    return m;
+Map<String, String> _combine(Map<String, String> first,
+    Map<String, String> second) {
+  if (first.isEmpty()) {
+    return second;
+  } else if (second.isEmpty()) {
+    return first;
   }
+  Map<String, String> m = new Map();
+  first.forEach((String k, String v) {
+    m[k] = v;
+  });
+  second.forEach((String k, String v) {
+    m[k] = v;
+  });
+  return m;
 }
 
-class _RequestFactory {
+class RequestFactory {
   final String _API_ENDPOINT = 'https://api.foursquare.com/v2';
   final String _VERSION = 'v20120429';
   String _accessToken;
@@ -93,19 +84,14 @@ class _RequestFactory {
   String _clientId;
   String _clientSecret;
 
-  _RequestFactory(String clientId, String clientSecret) {
+  RequestFactory(String clientId, String clientSecret) {
     this._clientId = clientId;
     this._clientSecret = clientSecret;
   }
 
-  _Request build(String method, String path, [Map<String, String> params]) {
+  Request build(String method, String path, [Map<String, String> params]) {
     String url = '$_API_ENDPOINT/$path?${_paramsStr(params)}';
-    switch (method) {
-      case 'GET':
-        return new _GetRequest(url);
-      case 'POST':
-        return new _PostRequest(url);
-    }
+    return new Request(method, url);
   }
 
   String _paramsStr(Map<String, String> params) {
@@ -125,14 +111,20 @@ class _RequestFactory {
   }
 }
 
-typedef bool SuccessCallback(Object);
-typedef bool FailureCallback(Object);
+typedef void SuccessCallback(Map);
+typedef void FailureCallback(Map);
 
-abstract class _Request {
-  void _doExecute(String url, String method, [Map<String, String> params,
-      SuccessCallback successCallback, FailureCallback failureCallback]) {
+class Request {
+
+  final String _method;
+  final String _url;
+
+  Request(this._method, this._url);
+
+  void execute([SuccessCallback successCallback,
+      FailureCallback failureCallback]) {
     XMLHttpRequest xhr = new XMLHttpRequest();
-    xhr.open(method, url);
+    xhr.open(_method, _url);
     xhr.on.loadEnd.add((Event e) {
       Object resp = JSON.parse(xhr.responseText);
       // TODO: Need to check if it's an error.
@@ -141,35 +133,5 @@ abstract class _Request {
       }
     });
     xhr.send();
-  }
-
-  abstract void execute([SuccessCallback successCallback,
-      FailureCallback failureCallback]);
-}
-
-class _GetRequest extends _Request {
-  final String url;
-  final String method = 'GET';
-
-  _GetRequest(this.url);
-
-  void execute([SuccessCallback successCallback,
-      FailureCallback failureCallback]) {
-    _doExecute(url, method, successCallback: successCallback,
-      failureCallback: failureCallback);
-  }
-}
-
-class _PostRequest extends _Request {
-  final String url;
-  final String method = 'POST';
-  final Map<String, String> params;
-
-  _PostRequest(this.url, [this.params=null]);
-
-  void execute([SuccessCallback successCallback,
-      FailureCallback failureCallback]) {
-    _doExecute(url, method, params: params, successCallback: successCallback,
-      failureCallback: failureCallback);
   }
 }

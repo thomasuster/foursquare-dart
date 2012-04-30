@@ -1,18 +1,22 @@
-class _Venues extends _Endpoint {
-  _Venues(_RequestFactory requestFactory) {
-    this._endpoint = 'venues';
-    this._requestFactory = requestFactory;
-  }
+class _Venues {
+  final String _endpoint = 'venues';
+  final RequestFactory _requestFactory;
+
+  _Venues(this._requestFactory);
 
   /*
    * General
    */
 
-  _GetRequest get(String venueId, [Map<String, String> additional]) {
+  Request operator call(String venueId, [Map<String, String> additional]) {
+    return get(venueId, additional);
+  }
+
+  Request get(String venueId, [Map<String, String> additional]) {
     return _requestFactory.build('GET', '$_endpoint/$venueId', additional);
   }
 
-  _PostRequest add([String address, String crossStreet, String city,
+  Request add([String address, String crossStreet, String city,
       String state, String zip, String phone, String twitter, String ll,
       String primaryCategoryId, String description, String url,
       bool ignoreDuplicates, String ignoreDuplicatesKey,
@@ -35,11 +39,11 @@ class _Venues extends _Endpoint {
     return _requestFactory.build('POST', '$_endpoint/add', params);
   }
 
-  _GetRequest categories([Map<String, String> additional]) {
+  Request categories([Map<String, String> additional]) {
     return _requestFactory.build('GET', '$_endpoint/categories', additional);
   }
 
-  _GetRequest explore([String ll, String near, num llAcc, int alt, num altAcc,
+  Request explore([String ll, String near, num llAcc, int alt, num altAcc,
       int radius, String section, String query, int limit, String intent,
       String novelty, Map<String, String> additional]) {
     Map<String, String> params = _combine({
@@ -58,11 +62,11 @@ class _Venues extends _Endpoint {
     return _requestFactory.build('GET', '$_endpoint/explore', params);
   }
 
-  _GetRequest managed([Map<String, String> additional]) {
+  Request managed([Map<String, String> additional]) {
     return _requestFactory.build('GET', '$_endpoint/managed', additional);
   }
 
-  _GetRequest search([String ll, String near, num llAcc, int alt, num altAcc,
+  Request search([String ll, String near, num llAcc, int alt, num altAcc,
       String query, int limit, String intent, int radius, String sw, String ne,
       String categoryId, String url, String providerId, int linkedId,
       Map<String, String> additional]) {
@@ -86,7 +90,7 @@ class _Venues extends _Endpoint {
     return _requestFactory.build('GET', '$_endpoint/search', params);
   }
 
-  _GetRequest suggestcompletion(String ll, [num llAcc, int alt, num altAcc,
+  Request suggestcompletion(String ll, [num llAcc, int alt, num altAcc,
       String query, int limit, Map<String, String> additional]) {
     Map<String, String> params = _combine({
       'll': ll,
@@ -99,7 +103,7 @@ class _Venues extends _Endpoint {
     return _requestFactory.build('GET', '$_endpoint/suggestcompletion', params);
   }
 
-  _GetRequest timeseries(String venueId, [int startAt, int endAt,
+  Request timeseries(String venueId, [int startAt, int endAt,
       Map<String, String> additional]) {
     Map<String, String> params = _combine({
       'venueId': venueId,
@@ -109,7 +113,7 @@ class _Venues extends _Endpoint {
     return _requestFactory.build('GET', '$_endpoint/timeseries', params);
   }
 
-  _GetRequest trending(String ll, [int limit, int radius,
+  Request trending(String ll, [int limit, int radius,
       Map<String, String> additional]) {
     Map<String, String> params = _combine({
       'll': ll,
@@ -123,12 +127,12 @@ class _Venues extends _Endpoint {
    * Aspects
    */
 
-  _GetRequest events(String venueId, [Map<String, String> additional]) {
+  Request events(String venueId, [Map<String, String> additional]) {
     return _requestFactory.build('GET', '$_endpoint/$venueId/events',
         additional);
   }
 
-  _GetRequest herenow(String venueId, [int limit, int offset,
+  Request herenow(String venueId, [int limit, int offset,
       int afterTimestamp, Map<String, String> additional]) {
     Map<String, String> params = _combine({
       'limit': limit.toString(),
@@ -138,12 +142,12 @@ class _Venues extends _Endpoint {
     return _requestFactory.build('GET', '$_endpoint/$venueId/herenow', params);
   }
 
-  _GetRequest links(String venueId, [Map<String, String> additional]) {
+  Request links(String venueId, [Map<String, String> additional]) {
     return _requestFactory.build('GET', '$_endpoint/$venueId/links',
         additional);
   }
 
-  _GetRequest listed(String venueId, [String group, int limit, int offset,
+  Request listed(String venueId, [String group, int limit, int offset,
       Map<String, String> additional]) {
     Map<String, String> params = _combine({
       'group': group,
@@ -153,11 +157,11 @@ class _Venues extends _Endpoint {
     return _requestFactory.build('GET', '$_endpoint/$venueId/listed', params);
   }
 
-  _GetRequest menu(String venueId, [Map<String, String> additional]) {
+  Request menu(String venueId, [Map<String, String> additional]) {
     return _requestFactory.build('GET', '$_endpoint/$venueId/menu', additional);
   }
 
-  _GetRequest photos(String venueId, String group, [int limit, int offset,
+  Request photos(String venueId, String group, [int limit, int offset,
       Map<String, String> additional]) {
     Map<String, String> params = _combine({
       'group': group,
@@ -167,12 +171,12 @@ class _Venues extends _Endpoint {
     return _requestFactory.build('GET', '$_endpoint/$venueId/photos', params);
   }
 
-  _GetRequest similar(String venueId, [Map<String, String> additional]) {
+  Request similar(String venueId, [Map<String, String> additional]) {
     return _requestFactory.build('GET', '$_endpoint/$venueId/similar',
         additional);
   }
 
-  _GetRequest stats(String venueId, [int startAt, int endAt,
+  Request stats(String venueId, [int startAt, int endAt,
       Map<String, String> additional]) {
     Map<String, String> params = _combine({
       'startAt': startAt.toString(),
@@ -181,7 +185,7 @@ class _Venues extends _Endpoint {
     return _requestFactory.build('GET', '$_endpoint/$venueId/stats', params);
   }
 
-  _GetRequest tips(String venueId, [String sort, int limit, int offset,
+  Request tips(String venueId, [String sort, int limit, int offset,
        Map<String, String> additional]) {
     Map<String, String> params = _combine({
       'sort': sort,
@@ -195,7 +199,7 @@ class _Venues extends _Endpoint {
    * Actions
    */
 
-  _PostRequest edit(String venueId, [String name, String address,
+  Request edit(String venueId, [String name, String address,
       String crossStreet, String city, String state, String zip, String phone,
       String twitter, String ll, String categoryId, String description,
       String url, Map<String, String> additional]) {
@@ -216,12 +220,12 @@ class _Venues extends _Endpoint {
     return _requestFactory.build('POST', '$_endpoint/$venueId/edit', params);
   }
 
-  _PostRequest flag(String venueId, [Map<String, String> additional]) {
+  Request flag(String venueId, [Map<String, String> additional]) {
     return _requestFactory.build('POST', '$_endpoint/$venueId/flag',
         additional);
   }
 
-  _PostRequest marktodo(String venueId, [String text,
+  Request marktodo(String venueId, [String text,
       Map<String, String> additional]) {
     Map<String, String> params = _combine({
       'text': text,
@@ -230,7 +234,7 @@ class _Venues extends _Endpoint {
         params);
   }
 
-  _PostRequest proposeedit(String venueId, [String name, String address,
+  Request proposeedit(String venueId, [String name, String address,
       String crossStreet, String city, String state, String zip, String phone,
       String ll, String primaryCategoryId, Map<String, String> additional]) {
     Map<String, String> params = _combine({

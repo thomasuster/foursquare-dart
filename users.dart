@@ -1,29 +1,29 @@
-class _Users extends _Endpoint {
-  _Users(_RequestFactory requestFactory) {
-    this._endpoint = 'users';
-    this._requestFactory = requestFactory;
-  }
+class _Users {
+  final String _endpoint = 'users';
+  final RequestFactory _requestFactory;
+
+  _Users(this._requestFactory);
 
   /*
    * General
    */
 
-  _GetRequest get(String userId, [Map<String, String> additional]) {
+  Request get(String userId, [Map<String, String> additional]) {
     return _requestFactory.build('GET', '$_endpoint/$userId', additional);
   }
 
-  _GetRequest leaderboard([int neighbors, Map<String, String> additional]) {
+  Request leaderboard([int neighbors, Map<String, String> additional]) {
     Map<String, String> params = _combine({
       'neighbors': neighbors.toString(),
     }, additional);
     return _requestFactory.build('GET', '$_endpoint/leaderboard', params);
   }
 
-  _GetRequest requests([Map<String, String> additional]) {
+  Request requests([Map<String, String> additional]) {
     return _requestFactory.build('GET', '$_endpoint/requests', additional);
   }
 
-  _GetRequest search([List<String> phone, List<String> email,
+  Request search([List<String> phone, List<String> email,
       List<String> twitter, String twitterSource, List<String> fbid,
       String name, Map<String, String> additional]) {
     Map<String, String> params = _combine({
@@ -41,12 +41,12 @@ class _Users extends _Endpoint {
    * Aspects
    */
 
-  _GetRequest badges([String userId='self', Map<String, String> additional]) {
+  Request badges([String userId='self', Map<String, String> additional]) {
     return _requestFactory.build('GET', '$_endpoint/$userId/badges',
         additional);
   }
 
-  _GetRequest checkins([String userId='self', int limit, int offset,
+  Request checkins([String userId='self', int limit, int offset,
       int afterTimestamp, int beforeTimestamp,
       Map<String, String> additional]) {
     Map<String, String> params = _combine({
@@ -58,7 +58,7 @@ class _Users extends _Endpoint {
     return _requestFactory.build('GET', '$_endpoint/$userId/checkins', params);
   }
 
-  _GetRequest friends([String userId='self', int limit, int offset,
+  Request friends([String userId='self', int limit, int offset,
       Map<String, String> additional]) {
     Map<String, String> params = _combine({
       'limit': limit.toString(),
@@ -67,7 +67,7 @@ class _Users extends _Endpoint {
     return _requestFactory.build('GET', '$_endpoint/$userId/friends', params);
   }
 
-  _GetRequest lists([String userId='self', String group, String ll,
+  Request lists([String userId='self', String group, String ll,
       Map<String, String> additional]) {
     Map<String, String> params = _combine({
       'group': group,
@@ -76,13 +76,13 @@ class _Users extends _Endpoint {
     return _requestFactory.build('GET', '$_endpoint/$userId/lists', params);
   }
 
-  _GetRequest mayorships([String userId='self',
+  Request mayorships([String userId='self',
       Map<String, String> additional]) {
     return _requestFactory.build('GET', '$_endpoint/$userId/mayorships',
         additional);
   }
 
-  _GetRequest photos([String userId='self', int limit, int offset,
+  Request photos([String userId='self', int limit, int offset,
       Map<String, String> additional]) {
     Map<String, String> params = _combine({
       'limit': limit.toString(),
@@ -91,7 +91,7 @@ class _Users extends _Endpoint {
     return _requestFactory.build('GET', '$_endpoint/$userId/photos', params);
   }
 
-  _GetRequest tips([String userId='self', String sort, String ll, int limit,
+  Request tips([String userId='self', String sort, String ll, int limit,
       int offset, Map<String, String> additional]) {
     Map<String, String> params = _combine({
       'sort': sort,
@@ -102,7 +102,7 @@ class _Users extends _Endpoint {
     return _requestFactory.build('GET', '$_endpoint/$userId/tips', params);
   }
 
-  _GetRequest todos([String userId='self', String sort, String ll,
+  Request todos([String userId='self', String sort, String ll,
       Map<String, String> additional]) {
     Map<String, String> params = _combine({
       'sort': sort,
@@ -111,7 +111,7 @@ class _Users extends _Endpoint {
     return _requestFactory.build('GET', '$_endpoint/$userId/todos', params);
   }
 
-  _GetRequest venuehistory([String userId='self', int beforeTimestamp,
+  Request venuehistory([String userId='self', int beforeTimestamp,
       int afterTimestamp, String categoryId, Map<String, String> additional]) {
     Map<String, String> params = _combine({
       'beforeTimestamp': beforeTimestamp.toString(),
@@ -126,21 +126,21 @@ class _Users extends _Endpoint {
    * Actions
    */
 
-  _PostRequest approve(String userId, [Map<String, String> additional]) {
+  Request approve(String userId, [Map<String, String> additional]) {
     return _requestFactory.build('POST', '$_endpoint/$userId/approve',
         additional);
   }
 
-  _PostRequest deny(String userId, [Map<String, String> additional]) {
+  Request deny(String userId, [Map<String, String> additional]) {
     return _requestFactory.build('POST', '$_endpoint/$userId/deny', additional);
   }
 
-  _PostRequest request(String userId, [Map<String, String> additional]) {
+  Request request(String userId, [Map<String, String> additional]) {
     return _requestFactory.build('POST', '$_endpoint/$userId/request',
         additional);
   }
 
-  _PostRequest setpings(String userId, bool value,
+  Request setpings(String userId, bool value,
       [Map<String, String> additional]) {
     Map<String, String> params = _combine({
       'value': value.toString(),
@@ -148,13 +148,13 @@ class _Users extends _Endpoint {
     return _requestFactory.build('POST', '$_endpoint/$userId/setpings', params);
   }
 
-  _PostRequest unfriend(String userId, [Map<String, String> additional]) {
+  Request unfriend(String userId, [Map<String, String> additional]) {
     return _requestFactory.build('POST', '$_endpoint/$userId/unfriend',
         additional);
   }
 
   // TODO(jason): Support file upload for photo parameter.
-  _PostRequest update([Map<String, String> additional]) {
+  Request update([Map<String, String> additional]) {
     return _requestFactory.build('POST', '$_endpoint/self/update', additional);
   }
 }
