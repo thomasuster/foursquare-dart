@@ -13,7 +13,7 @@
 #source('tips.dart');
 
 final String _AUTH_URL = 'https://foursquare.com/oauth2/authenticate';
-final String _API_ENDPOINT = 'https://api.foursquare.com/v2/';
+final String _API_ENDPOINT = 'https://api.foursquare.com/v2';
 String _version = '20120502';
 String _accessToken;
 String _clientId;
@@ -55,6 +55,13 @@ class Foursquare {
   Venues get venues() => new Venues();
   Checkins get checkins() => new Checkins();
   Tips get tips() => new Tips();
+
+  Request multi(List<Request> requests, [String method='GET']) {
+    List<String> pathsAndQueries = [];
+    requests.forEach((Request r) => pathsAndQueries.add(r._getPathAndQuery(true)));
+    String requestsStr = Strings.join(pathsAndQueries, ',');
+    return new Request(method, 'multi', { 'requests': requestsStr });
+  }
 }
 
 Map<String, String> _combine(Map<String, Dynamic> first,
@@ -72,29 +79,28 @@ Map<String, String> _combine(Map<String, Dynamic> first,
 }
 
 class Request {
-  String method;
-  String path;
-  Map<String, String> params;
+  String _method;
+  String _path;
+  Map<String, String> _params;
 
-  Request(this.method, this.path, [this.params]);
+  Request(String method, String path, [Map<String, String> params]) :
+      _method = method,
+      _path = path,
+      _params = params;
 
-  Future<Map> execute() {
-    if (params == null) params = <String>{};
-    if (_accessToken != null) {
-      params['oauth_token'] = _accessToken;
-    } else {
-      params['client_id'] = _clientId;
-      params['client_secret'] = _clientSecret;
+  String _getPathAndQuery([bool multi=false]) {
+    if (!multi) {
+      if (_params == null) _params = <String>{};
+      _params['v'] = _version;
+      if (_accessToken != null) {
+        _params['oauth_token'] = _accessToken;
+      } else {
+        // To support userless requests
+        _params['client_id'] = _clientId;
+        _params['client_secret'] = _clientSecret;
+      }
     }
-    Uri uri = new Uri.fromString(
-        '$_API_ENDPOINT$path${_toParamsString(params)}');
-
-    Completer<Map> c = new Completer<Map>();
-    Future<HttpResponse> innerF = new HttpRequest(method, uri).execute();
-    innerF.handleException((e) => c.completeException(e));
-    innerF.then((HttpResponse r) => c.complete(JSON.parse(r.body)));
-
-    return c.future;
+    return '/$_path${_toParamsString(_params)}';
   }
 
   String _toParamsString(Map<String, String> p) {
@@ -104,5 +110,16 @@ class Request {
       parts.add('$key=${encodeURIComponent(val)}');
     });
     return '?' + Strings.join(parts, '&');
+  }
+
+  Future<Map> execute() {
+    Uri uri = new Uri.fromString('$_API_ENDPOINT${_getPathAndQuery()}');
+
+    Completer<Map> c = new Completer<Map>();
+    Future<HttpResponse> innerF = new HttpRequest(_method, uri).execute();
+    innerF.handleException((e) => c.completeException(e));
+    innerF.then((HttpResponse r) => c.complete(JSON.parse(r.body)));
+
+    return c.future;
   }
 }

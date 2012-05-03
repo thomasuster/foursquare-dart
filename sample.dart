@@ -17,8 +17,15 @@ main() {
 
         // Example of building an arbitrary request not covered by a
         // pre-defined utility methods.
-        new Request('GET', 'updates/notifications').execute()
-            .then((r2) => window.alert('Notifications: ${r2["response"]["notifications"]["items"].length}'));
+        new Request('GET', 'updates/notifications').execute().then((Map r2) {
+          window.console.log(r2['response']['notifications']['count']);
+        });
+
+        // Example of making a multi request
+        fsq.multi([fsq.users.get(), fsq.users.get('32'), fsq.users.get('33')])
+            .execute().then((Map r3) {
+              window.console.log(r3['response']['responses'].length);
+            });
       });
     });
   });
