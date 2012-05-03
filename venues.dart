@@ -26,7 +26,7 @@ class Venues{
       'primaryCategoryId': primaryCategoryId,
       'description': description,
       'url': url,
-      'ignoreDuplicates': ignoreDuplicates),
+      'ignoreDuplicates': ignoreDuplicates,
       'ignoreDuplicatesKey': ignoreDuplicatesKey,
     }, additional);
     return new Request('POST', '$endpoint/add', params);
@@ -42,13 +42,13 @@ class Venues{
     Map params = _combine({
       'll': ll,
       'near': near,
-      'llAcc': llAcc),
-      'alt': alt),
-      'altAcc': alt),
-      'radius': radius),
+      'llAcc': llAcc,
+      'alt': alt,
+      'altAcc': alt,
+      'radius': radius,
       'section': section,
       'query': query,
-      'limit': limit),
+      'limit': limit,
       'intent': intent,
       'novelty': novelty,
     }, additional);
@@ -66,19 +66,19 @@ class Venues{
     Map params = _combine({
       'll': ll,
       'near': near,
-      'llAcc': llAcc),
-      'alt': alt),
-      'altAcc': altAcc),
+      'llAcc': llAcc,
+      'alt': alt,
+      'altAcc': altAcc,
       'query': query,
-      'limit': limit),
+      'limit': limit,
       'intent': intent,
-      'radius': radius),
+      'radius': radius,
       'sw': sw,
       'ne': ne,
       'categoryId': categoryId,
       'url': url,
       'providerId': providerId,
-      'linkedId': linkedId),
+      'linkedId': linkedId,
     }, additional);
     return new Request('GET', '$endpoint/search', params);
   }
@@ -87,11 +87,11 @@ class Venues{
       String query, int limit, Map<String, String> additional]) {
     Map params = _combine({
       'll': ll,
-      'llAcc': llAcc),
-      'alt': alt),
-      'altAcc': altAcc),
+      'llAcc': llAcc,
+      'alt': alt,
+      'altAcc': altAcc,
       'query': query,
-      'limit': limit),
+      'limit': limit,
     }, additional);
     return new Request('GET', '$endpoint/suggestcompletion', params);
   }
@@ -100,8 +100,8 @@ class Venues{
       Map<String, String> additional]) {
     Map params = _combine({
       'venueId': venueId,
-      'startAt': startAt),
-      'endAt': endAt),
+      'startAt': startAt,
+      'endAt': endAt,
     }, additional);
     return new Request('GET', '$endpoint/timeseries', params);
   }
@@ -110,8 +110,8 @@ class Venues{
       Map<String, String> additional]) {
     Map params = _combine({
       'll': ll,
-      'limit': limit),
-      'radius': radius),
+      'limit': limit,
+      'radius': radius,
     }, additional);
     return new Request('GET', '$endpoint/trending', params);
   }
@@ -127,9 +127,9 @@ class Venues{
   Request herenow(String venueId, [int limit, int offset,
       int afterTimestamp, Map<String, String> additional]) {
     Map params = _combine({
-      'limit': limit),
-      'offset': offset),
-      'afterTimestamp': afterTimestamp),
+      'limit': limit,
+      'offset': offset,
+      'afterTimestamp': afterTimestamp,
     }, additional);
     return new Request('GET', '$endpoint/$venueId/herenow', params);
   }
@@ -142,8 +142,8 @@ class Venues{
       Map<String, String> additional]) {
     Map params = _combine({
       'group': group,
-      'limit': limit),
-      'offset': offset),
+      'limit': limit,
+      'offset': offset,
     }, additional);
     return new Request('GET', '$endpoint/$venueId/listed', params);
   }
@@ -156,8 +156,8 @@ class Venues{
       Map<String, String> additional]) {
     Map params = _combine({
       'group': group,
-      'limit': limit),
-      'offset': offset),
+      'limit': limit,
+      'offset': offset,
     }, additional);
     return new Request('GET', '$endpoint/$venueId/photos', params);
   }
@@ -169,8 +169,8 @@ class Venues{
   Request stats(String venueId, [int startAt, int endAt,
       Map<String, String> additional]) {
     Map params = _combine({
-      'startAt': startAt),
-      'endAt': endAt),
+      'startAt': startAt,
+      'endAt': endAt,
     }, additional);
     return new Request('GET', '$endpoint/$venueId/stats', params);
   }
@@ -179,8 +179,8 @@ class Venues{
        Map<String, String> additional]) {
     Map params = _combine({
       'sort': sort,
-      'limit': limit),
-      'offset': offset),
+      'limit': limit,
+      'offset': offset,
     }, additional);
     return new Request('GET', '$endpoint/$venueId/tips', params);
   }

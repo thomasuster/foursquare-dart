@@ -17,8 +17,8 @@ class Checkins {
       Map<String, String> additional]) {
     Map params = _combine({
       'll': ll,
-      'limit': limit.toString(),
-      'afterTimestamp': afterTimestamp.toString(),
+      'limit': limit,
+      'afterTimestamp': afterTimestamp,
     }, additional);
     return new Request('GET', '$endpoint/recent', params);
   }
