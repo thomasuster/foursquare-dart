@@ -25,8 +25,8 @@ class Tips {
     Map params = _combine({
       'll': ll,
       'near': near,
-      'limit': limit),
-      'offset': offset),
+      'limit': limit,
+      'offset': offset,
       'filter': filter,
       'query': query,
     }, additional);
@@ -40,8 +40,8 @@ class Tips {
   Request done(String tipId, [int limit, int offset,
       Map<String, String> additional]) {
     Map params = _combine({
-      'limit': limit),
-      'offset': offset),
+      'limit': limit,
+      'offset': offset,
     }, additional);
     return new Request('GET', '$endpoint/$tipId/done', params);
   }
