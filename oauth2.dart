@@ -46,7 +46,7 @@ Future<String> login(String authUrl, String clientId, String redirectUri,
       String url = '$authUrl?client_id=$encodedClientId&redirect_uri='
           + '$encodedRedirectUri&response_type=token&scope=$scopesStr';
 
-      window = window.open(url, 'authWindow',
+      _authWindow = window.open(url, 'authWindow',
           'width=$windowWidth,height=$windowHeight');
     }
     return _lastCompleter.future;
