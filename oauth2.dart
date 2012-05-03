@@ -4,10 +4,7 @@
 #import('dart:json');
 #import('uri.dart');
 
-typedef bool AuthCallback(String);
-typedef bool AuthErrorCallback(AuthError);
-
-class AuthError {
+class AuthError implements Exception {
   String error;
   String errorDescription;
   String errorUri;
@@ -16,15 +13,15 @@ class AuthError {
 }
 
 AuthRequest _lastRequest;
-AuthCallback _lastCallback;
-AuthErrorCallback _lastErrorCallback;
+Completer<String> _lastCompleter;
 Window _authWindow;
 
 bool addedCallback = false;
 
-void login(AuthRequest req, [AuthCallback successCallback,
-    AuthErrorCallback errorCallback,
+Future<String> login(AuthRequest req, [Function successCallback,
+    Function errorCallback,
     int windowHeight=600, int windowWidth=800]) {
+
   if (!addedCallback) {
     addedCallback = true;
     window.on.message.add((MessageEvent e) {
@@ -40,20 +37,26 @@ void login(AuthRequest req, [AuthCallback successCallback,
       errorCallback(new AuthError('Authentication in progress', null, null));
     } else {
       _lastRequest = req;
-      _lastCallback = successCallback;
-      _lastErrorCallback = errorCallback;
+      _lastCompleter = new Completer<String>();
       window = window.open(req.toUrl(), 'authWindow',
           'width=$windowWidth,height=$windowHeight');
     }
+    return _lastCompleter.future;
   } else {
-    successCallback(info._accessToken);
+    return new Future.immediate(info._accessToken);
   }
 }
 
 bool _expiringSoon(_TokenInfo info) {
-  int expires = Math.parseInt(info._expires);
-  int tenMinutesFromNow = new Date.now().milliseconds + (10 * 60 * 1000);
-  return expires < tenMinutesFromNow;
+  if (info._expires == null || info._expires == 'null') {
+    return false;
+  } else {
+    window.console.log(info._expires);
+    window.console.log(info._expires == 'null');
+    int expires = Math.parseInt(info._expires == null ? '0' : info._expires);
+    int tenMinutesFromNow = new Date.now().milliseconds + (10 * 60 * 1000);
+    return expires < tenMinutesFromNow;
+  }
 }
 
 void finish(String hash) {
@@ -87,17 +90,17 @@ void finish(String hash) {
   }
 
   // Call the appropriate callback with data.
-  if (values['error'] != null && _lastErrorCallback != null) {
-    _lastErrorCallback(new AuthError(values['error'],
+  if (values['error'] != null && _lastCompleter != null) {
+    _lastCompleter.completeException(new AuthError(values['error'],
         values['error_description'], values['error_uri']));
-  } else if (_lastCallback != null) {
+  } else {
     // Store the token info for later retrieval.
     _TokenInfo info = new _TokenInfo();
     info._accessToken = values['access_token'];
     info._expires = values['expires'];
     window.localStorage.$dom_setItem(_lastRequest.asString(), info.asString());
 
-    _lastCallback(values['access_token']);
+    _lastCompleter.complete(values['access_token']);
   }
 }
 
@@ -121,25 +124,25 @@ class _TokenInfo {
 
 class AuthRequest {
   final String _authUrl;
-  final String _clientId;
-  final List<String> _scopes;
-  final String _scopeDelimiter;
-  final String _redirectUri;
+  String clientId;
+  List<String> scopes;
+  String scopeDelimiter;
+  String redirectUri;
 
-  const AuthRequest(this._authUrl, this._clientId, [this._scopes=null,
-      this._scopeDelimiter='', this._redirectUri='']);
+  AuthRequest(this._authUrl, this.clientId, this.redirectUri, [this.scopes=null,
+      this.scopeDelimiter=' ']);
 
   String toUrl() {
-    String encodedClientId = encodeURIComponent(_clientId);
-    String encodedRedirectUri = encodeURIComponent(_redirectUri);
-    String scopesStr = _scopes == null ? '' :
-        Strings.join(_scopes, _scopeDelimiter);
+    String encodedClientId = encodeURIComponent(clientId);
+    String encodedRedirectUri = encodeURIComponent(redirectUri);
+    String scopesStr = ''; // TODO scopes == null ? '' :
+        //Strings.join(scopes, scopeDelimiter);
     return '$_authUrl?client_id=$encodedClientId&redirect_uri='
-        + '$encodedRedirectUri&type=token&scopes=$scopesStr';
+        + '$encodedRedirectUri&response_type=token&scopes=$scopesStr';
   }
 
   String asString() {
-    return '$_clientId=====$_scopes';
+    return '$clientId=====$scopes';
   }
 }
 

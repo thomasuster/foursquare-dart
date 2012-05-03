@@ -1,10 +1,9 @@
 <html>
  <head>
-  <script type="application/dart">
-#import('oauth2.dart');
-
-main() {
-  initForPopup();
+  <script>
+// TODO: Have this written in Dart and defer to JS if Dart is unavailable.
+if (window.opener) {
+  window.opener.postMessage(window.location.hash, '*');
 }
   </script>
  </head>

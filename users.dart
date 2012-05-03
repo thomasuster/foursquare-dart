@@ -8,7 +8,7 @@ class Users {
    * General
    */
 
-  Request get(String userId, [Map<String, String> additional]) {
+  Request get([String userId='self', Map<String, String> additional]) {
     return _requestFactory.build('GET', '$endpoint/$userId', additional);
   }
 

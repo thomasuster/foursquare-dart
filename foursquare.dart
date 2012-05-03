@@ -2,7 +2,7 @@
 
 #import('dart:html');
 #import('dart:json');
-#import('oauth2.dart');
+#import('oauth2.dart', prefix:'oauth2');
 #import('uri.dart');
 
 #source('users.dart');
@@ -13,27 +13,30 @@ class Foursquare {
   RequestFactory _requestFactory;
   String _clientId;
 
-  Foursquare(String clientId, [String clientSecret]) {
+  Foursquare(String clientId) {
+    this._requestFactory = new RequestFactory(clientId);
+    this._clientId = clientId;
+  }
+
+  Foursquare.forUserlessRequests(String clientId, String clientSecret) {
     this._requestFactory = new RequestFactory(clientId, clientSecret);
     this._clientId = clientId;
   }
 
-  /* Not currently implemented because OAuth 2.0 library does not work.
-  void login([VoidCallback successCallback]) {
-    AuthRequest req = new AuthRequest(
-        'https://foursquare.com/oauth2/authenticate', _clientId);
-    new Auth().login(req,
-      successCallback: (String accessToken) {
-        this.accessToken = accessToken;
+  Future<Dynamic> login(String redirectUri) {
+    Completer<Dynamic> c = new Completer<Dynamic>();
 
-        if (successCallback != null) {
-          successCallback();
-        }
-      },
-      errorCallback: (AuthError e) {
-        window.alert(e.error);
-      });
-  } */
+    oauth2.AuthRequest req = new oauth2.AuthRequest(
+        'https://foursquare.com/oauth2/authenticate', _clientId, redirectUri);
+    Future<String> future = oauth2.login(req);
+    future.then((String accessToken) {
+      this.accessToken = accessToken;
+      c.complete(null);
+    });
+    future.handleException((Exception e) => c.completeException(e));
+
+    return c.future;
+  }
 
   String get accessToken() => this._requestFactory._accessToken;
          set accessToken(value) => this._requestFactory._accessToken = value;
@@ -78,13 +81,13 @@ Map<String, String> _combine(Map<String, String> first,
 
 class RequestFactory {
   final String _API_ENDPOINT = 'https://api.foursquare.com/v2';
-  final String _VERSION = 'v20120429';
+  String version = '20120502';
   String _accessToken;
 
   String _clientId;
   String _clientSecret;
 
-  RequestFactory(String clientId, String clientSecret) {
+  RequestFactory(String clientId, [String clientSecret]) {
     this._clientId = clientId;
     this._clientSecret = clientSecret;
   }
@@ -95,7 +98,7 @@ class RequestFactory {
   }
 
   String _paramsStr(Map<String, String> params) {
-    List<String> parts = new List.from(['v=$_VERSION']);
+    List<String> parts = new List.from(['v=$version']);
     if (_accessToken != null) {
       parts.add('oauth_token=$_accessToken');
     } else {
@@ -111,9 +114,6 @@ class RequestFactory {
   }
 }
 
-typedef void SuccessCallback(Map);
-typedef void FailureCallback(Map);
-
 class Request {
 
   final String _method;
@@ -121,17 +121,31 @@ class Request {
 
   Request(this._method, this._url);
 
-  void execute([SuccessCallback successCallback,
-      FailureCallback failureCallback]) {
+  Future<Map> execute() {
+
+    final completer = new Completer();
     XMLHttpRequest xhr = new XMLHttpRequest();
-    xhr.open(_method, _url);
+    xhr.open(_method, _url, true, null, null);
+
+    xhr.on.error.add((Event e) => completer.completeException(new NetworkException()));
     xhr.on.loadEnd.add((Event e) {
-      Object resp = JSON.parse(xhr.responseText);
-      // TODO: Need to check if it's an error.
-      if (successCallback != null) {
-        successCallback(resp);
+      if (xhr.status >= 400) {
+        completer.completeException(new HttpException(xhr.status));
+      } else {
+        completer.complete(JSON.parse(xhr.responseText));
       }
     });
     xhr.send();
+
+    return completer.future;
   }
+}
+
+class NetworkException implements Exception {
+  NetworkException();
+}
+
+class HttpException implements Exception {
+  int code;
+  HttpException(int this.code);
 }
