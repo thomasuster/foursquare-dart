@@ -11,7 +11,7 @@ class Tips {
 
   Request add(String venueId, String text, [String url, String broadcast,
       Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'venueId': venueId,
       'text': text,
       'url': url,
@@ -22,7 +22,7 @@ class Tips {
 
   Request search([String ll, String near, int limit, int offset, String filter,
       String query, Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'll': ll,
       'near': near,
       'limit': limit.toString(),
@@ -39,7 +39,7 @@ class Tips {
 
   Request done(String tipId, [int limit, int offset,
       Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'limit': limit.toString(),
       'offset': offset.toString(),
     }, additional);
@@ -48,7 +48,7 @@ class Tips {
 
   Request listed(String tipId, [String edited,
       Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'edited': edited,
     }, additional);
     return new Request('GET', '$endpoint/$tipId/listed', params);
@@ -59,13 +59,11 @@ class Tips {
    */
 
   Request markdone(String tipId, [Map<String, String> additional]) {
-    return new Request('POST', '$endpoint/$tipId/markdone',
-        additional);
+    return new Request('POST', '$endpoint/$tipId/markdone', additional);
   }
 
   Request marktodo(String tipId, [Map<String, String> additional]) {
-    return new Request('POST', '$endpoint/$tipId/marktodo',
-        additional);
+    return new Request('POST', '$endpoint/$tipId/marktodo', additional);
   }
 
   Request unmark(String tipId, [Map<String, String> additional]) {

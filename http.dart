@@ -1,9 +1,7 @@
 #library('HTTP utilities');
 
 #import('dart:html');
-#import('dart:json');
 #import('dart:uri');
-#import('uri.dart');
 
 class HttpRequest {
   String method;
@@ -13,12 +11,14 @@ class HttpRequest {
   HttpRequest(String this.method, Uri this.uri,
       [Map<String, String> this.headers]);
 
-  Future<Map> execute([String body]) {
-    Completer<Map> completer = new Completer<Map>();
+  Future<HttpResponse> execute([String body]) {
+    Completer<HttpResponse> completer = new Completer<HttpResponse>();
     XMLHttpRequest xhr = new XMLHttpRequest();
     xhr.open(method, uri.toString());
 
-    this.headers.forEach((k, v) => xhr.setRequestHeader(k, v));
+    if (headers != null) {
+      headers.forEach((k, v) => xhr.setRequestHeader(k, v));
+    }
 
     xhr.on.error.add((Event e) {
       completer.completeException(new HttpException());
@@ -27,8 +27,19 @@ class HttpRequest {
       if (xhr.status >= 400) {
         completer.completeException(new HttpException(xhr.status));
       } else {
-        // TODO: Return an HttpResponse instead of JSON parsing by default.
-        completer.complete(JSON.parse(xhr.responseText));
+        List<String> headerParts = xhr.getAllResponseHeaders().split('\n');
+        var responseHeaders = <String>{};
+        headerParts.forEach((String hp) {
+          int idx = hp.indexOf(':');
+          if (idx < 0) {
+            responseHeaders[hp] = null;
+          } else {
+            String k = hp.substring(0, idx);
+            String v = hp.substring(idx + 2);
+            responseHeaders[k] = v;
+          }
+        });
+        completer.complete(new HttpResponse(xhr.responseText, responseHeaders));
       }
     });
     xhr.send(body);
@@ -37,16 +48,14 @@ class HttpRequest {
   }
 }
 
+class HttpResponse {
+  final String body;
+  final Map<String, String> headers;
+
+  HttpResponse(this.body, this.headers);
+}
+
 class HttpException implements Exception {
   int code;
   HttpException([int this.code]);
-}
-
-String toParamsString(Map<String, String> params) {
-  if (params == null) return '';
-  List<String> parts = new List<String>();
-  params.forEach((String key, String val) {
-    parts.add('$key=${encodeURIComponent(val)}');
-  });
-  return '?' + Strings.join(parts, '&');
 }

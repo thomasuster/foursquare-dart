@@ -10,8 +10,8 @@ class Users {
   }
 
   Request leaderboard([int neighbors, Map<String, String> additional]) {
-    Map<String, String> params = _combine({
-      'neighbors': neighbors.toString(),
+    Map params = _combine({
+      'neighbors': neighbors,
     }, additional);
     return new Request('GET', '$endpoint/leaderboard', params);
   }
@@ -23,7 +23,7 @@ class Users {
   Request search([List<String> phone, List<String> email,
       List<String> twitter, String twitterSource, List<String> fbid,
       String name, Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'phone': Strings.join(phone, ','),
       'email': Strings.join(email, ','),
       'twitter': Strings.join(twitter, ','),
@@ -39,34 +39,33 @@ class Users {
    */
 
   Request badges([String userId='self', Map<String, String> additional]) {
-    return new Request('GET', '$endpoint/$userId/badges',
-        additional);
+    return new Request('GET', '$endpoint/$userId/badges', additional);
   }
 
   Request checkins([String userId='self', int limit, int offset,
       int afterTimestamp, int beforeTimestamp,
       Map<String, String> additional]) {
-    Map<String, String> params = _combine({
-      'limit': limit.toString(),
-      'offset': offset.toString(),
-      'afterTimestamp': afterTimestamp.toString(),
-      'beforeTimestamp': beforeTimestamp.toString(),
+    Map params = _combine({
+      'limit': limit,
+      'offset': offset,
+      'afterTimestamp': afterTimestamp,
+      'beforeTimestamp': beforeTimestamp,
     }, additional);
     return new Request('GET', '$endpoint/$userId/checkins', params);
   }
 
   Request friends([String userId='self', int limit, int offset,
       Map<String, String> additional]) {
-    Map<String, String> params = _combine({
-      'limit': limit.toString(),
-      'offset': offset.toString(),
+    Map params = _combine({
+      'limit': limit,
+      'offset': offset,
     }, additional);
     return new Request('GET', '$endpoint/$userId/friends', params);
   }
 
   Request lists([String userId='self', String group, String ll,
       Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'group': group,
       'll': ll,
     }, additional);
@@ -81,27 +80,27 @@ class Users {
 
   Request photos([String userId='self', int limit, int offset,
       Map<String, String> additional]) {
-    Map<String, String> params = _combine({
-      'limit': limit.toString(),
-      'offset': offset.toString(),
+    Map params = _combine({
+      'limit': limit,
+      'offset': offset,
     }, additional);
     return new Request('GET', '$endpoint/$userId/photos', params);
   }
 
   Request tips([String userId='self', String sort, String ll, int limit,
       int offset, Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'sort': sort,
       'll': ll,
-      'limit': limit.toString(),
-      'offset': offset.toString(),
+      'limit': limit,
+      'offset': offset,
     }, additional);
     return new Request('GET', '$endpoint/$userId/tips', params);
   }
 
   Request todos([String userId='self', String sort, String ll,
       Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'sort': sort,
       'll': ll,
     }, additional);
@@ -110,13 +109,12 @@ class Users {
 
   Request venuehistory([String userId='self', int beforeTimestamp,
       int afterTimestamp, String categoryId, Map<String, String> additional]) {
-    Map<String, String> params = _combine({
-      'beforeTimestamp': beforeTimestamp.toString(),
-      'afterTimestamp': afterTimestamp.toString(),
+    Map params = _combine({
+      'beforeTimestamp': beforeTimestamp,
+      'afterTimestamp': afterTimestamp,
       'categoryId': categoryId,
     }, additional);
-    return new Request('GET', '$endpoint/$userId/venuehistory',
-        params);
+    return new Request('GET', '$endpoint/$userId/venuehistory', params);
   }
 
   /*
@@ -124,8 +122,7 @@ class Users {
    */
 
   Request approve(String userId, [Map<String, String> additional]) {
-    return new Request('POST', '$endpoint/$userId/approve',
-        additional);
+    return new Request('POST', '$endpoint/$userId/approve', additional);
   }
 
   Request deny(String userId, [Map<String, String> additional]) {
@@ -133,21 +130,19 @@ class Users {
   }
 
   Request request(String userId, [Map<String, String> additional]) {
-    return new Request('POST', '$endpoint/$userId/request',
-        additional);
+    return new Request('POST', '$endpoint/$userId/request', additional);
   }
 
   Request setpings(String userId, bool value,
       [Map<String, String> additional]) {
-    Map<String, String> params = _combine({
-      'value': value.toString(),
+    Map params = _combine({
+      'value': value,
     }, additional);
     return new Request('POST', '$endpoint/$userId/setpings', params);
   }
 
   Request unfriend(String userId, [Map<String, String> additional]) {
-    return new Request('POST', '$endpoint/$userId/unfriend',
-        additional);
+    return new Request('POST', '$endpoint/$userId/unfriend', additional);
   }
 
   // TODO(jason): Support file upload for photo parameter.

@@ -7,7 +7,7 @@ class Checkins {
 
   Request get(String checkinId, [String signature,
       Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'signature': signature,
     }, additional);
     return new Request('GET', '$endpoint/$checkinId', params);
@@ -15,7 +15,7 @@ class Checkins {
 
   Request recent([String ll, int limit, int afterTimestamp,
       Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'll': ll,
       'limit': limit.toString(),
       'afterTimestamp': afterTimestamp.toString(),
@@ -29,19 +29,17 @@ class Checkins {
 
   Request addcomment(String checkinId, String text,
       [Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'text': text,
     }, additional);
-    return new Request('POST', '$endpoint/$checkinId/addcomment',
-        params);
+    return new Request('POST', '$endpoint/$checkinId/addcomment', params);
   }
 
   Request deletecomment(String checkinId, String commentId,
       [Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'commentId': commentId,
     }, additional);
-    return new Request('POST', '$endpoint/$checkinId/deletecomment',
-        params);
+    return new Request('POST', '$endpoint/$checkinId/deletecomment', params);
   }
 }

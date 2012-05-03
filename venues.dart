@@ -14,7 +14,7 @@ class Venues{
       String primaryCategoryId, String description, String url,
       bool ignoreDuplicates, String ignoreDuplicatesKey,
       Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'address': address,
       'crossStreet': crossStreet,
       'city': city,
@@ -26,7 +26,7 @@ class Venues{
       'primaryCategoryId': primaryCategoryId,
       'description': description,
       'url': url,
-      'ignoreDuplicates': ignoreDuplicates.toString(),
+      'ignoreDuplicates': ignoreDuplicates),
       'ignoreDuplicatesKey': ignoreDuplicatesKey,
     }, additional);
     return new Request('POST', '$endpoint/add', params);
@@ -39,16 +39,16 @@ class Venues{
   Request explore([String ll, String near, num llAcc, int alt, num altAcc,
       int radius, String section, String query, int limit, String intent,
       String novelty, Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'll': ll,
       'near': near,
-      'llAcc': llAcc.toString(),
-      'alt': alt.toString(),
-      'altAcc': alt.toString(),
-      'radius': radius.toString(),
+      'llAcc': llAcc),
+      'alt': alt),
+      'altAcc': alt),
+      'radius': radius),
       'section': section,
       'query': query,
-      'limit': limit.toString(),
+      'limit': limit),
       'intent': intent,
       'novelty': novelty,
     }, additional);
@@ -63,55 +63,55 @@ class Venues{
       String query, int limit, String intent, int radius, String sw, String ne,
       String categoryId, String url, String providerId, int linkedId,
       Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'll': ll,
       'near': near,
-      'llAcc': llAcc.toString(),
-      'alt': alt.toString(),
-      'altAcc': altAcc.toString(),
+      'llAcc': llAcc),
+      'alt': alt),
+      'altAcc': altAcc),
       'query': query,
-      'limit': limit.toString(),
+      'limit': limit),
       'intent': intent,
-      'radius': radius.toString(),
+      'radius': radius),
       'sw': sw,
       'ne': ne,
       'categoryId': categoryId,
       'url': url,
       'providerId': providerId,
-      'linkedId': linkedId.toString(),
+      'linkedId': linkedId),
     }, additional);
     return new Request('GET', '$endpoint/search', params);
   }
 
   Request suggestcompletion(String ll, [num llAcc, int alt, num altAcc,
       String query, int limit, Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'll': ll,
-      'llAcc': llAcc.toString(),
-      'alt': alt.toString(),
-      'altAcc': altAcc.toString(),
+      'llAcc': llAcc),
+      'alt': alt),
+      'altAcc': altAcc),
       'query': query,
-      'limit': limit.toString(),
+      'limit': limit),
     }, additional);
     return new Request('GET', '$endpoint/suggestcompletion', params);
   }
 
   Request timeseries(String venueId, [int startAt, int endAt,
       Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'venueId': venueId,
-      'startAt': startAt.toString(),
-      'endAt': endAt.toString(),
+      'startAt': startAt),
+      'endAt': endAt),
     }, additional);
     return new Request('GET', '$endpoint/timeseries', params);
   }
 
   Request trending(String ll, [int limit, int radius,
       Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'll': ll,
-      'limit': limit.toString(),
-      'radius': radius.toString(),
+      'limit': limit),
+      'radius': radius),
     }, additional);
     return new Request('GET', '$endpoint/trending', params);
   }
@@ -121,31 +121,29 @@ class Venues{
    */
 
   Request events(String venueId, [Map<String, String> additional]) {
-    return new Request('GET', '$endpoint/$venueId/events',
-        additional);
+    return new Request('GET', '$endpoint/$venueId/events', additional);
   }
 
   Request herenow(String venueId, [int limit, int offset,
       int afterTimestamp, Map<String, String> additional]) {
-    Map<String, String> params = _combine({
-      'limit': limit.toString(),
-      'offset': offset.toString(),
-      'afterTimestamp': afterTimestamp.toString(),
+    Map params = _combine({
+      'limit': limit),
+      'offset': offset),
+      'afterTimestamp': afterTimestamp),
     }, additional);
     return new Request('GET', '$endpoint/$venueId/herenow', params);
   }
 
   Request links(String venueId, [Map<String, String> additional]) {
-    return new Request('GET', '$endpoint/$venueId/links',
-        additional);
+    return new Request('GET', '$endpoint/$venueId/links', additional);
   }
 
   Request listed(String venueId, [String group, int limit, int offset,
       Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'group': group,
-      'limit': limit.toString(),
-      'offset': offset.toString(),
+      'limit': limit),
+      'offset': offset),
     }, additional);
     return new Request('GET', '$endpoint/$venueId/listed', params);
   }
@@ -156,34 +154,33 @@ class Venues{
 
   Request photos(String venueId, String group, [int limit, int offset,
       Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'group': group,
-      'limit': limit.toString(),
-      'offset': offset.toString(),
+      'limit': limit),
+      'offset': offset),
     }, additional);
     return new Request('GET', '$endpoint/$venueId/photos', params);
   }
 
   Request similar(String venueId, [Map<String, String> additional]) {
-    return new Request('GET', '$endpoint/$venueId/similar',
-        additional);
+    return new Request('GET', '$endpoint/$venueId/similar', additional);
   }
 
   Request stats(String venueId, [int startAt, int endAt,
       Map<String, String> additional]) {
-    Map<String, String> params = _combine({
-      'startAt': startAt.toString(),
-      'endAt': endAt.toString(),
+    Map params = _combine({
+      'startAt': startAt),
+      'endAt': endAt),
     }, additional);
     return new Request('GET', '$endpoint/$venueId/stats', params);
   }
 
   Request tips(String venueId, [String sort, int limit, int offset,
        Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'sort': sort,
-      'limit': limit.toString(),
-      'offset': offset.toString(),
+      'limit': limit),
+      'offset': offset),
     }, additional);
     return new Request('GET', '$endpoint/$venueId/tips', params);
   }
@@ -196,7 +193,7 @@ class Venues{
       String crossStreet, String city, String state, String zip, String phone,
       String twitter, String ll, String categoryId, String description,
       String url, Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'name': name,
       'address': address,
       'crossStreet': crossStreet,
@@ -214,23 +211,21 @@ class Venues{
   }
 
   Request flag(String venueId, [Map<String, String> additional]) {
-    return new Request('POST', '$endpoint/$venueId/flag',
-        additional);
+    return new Request('POST', '$endpoint/$venueId/flag', additional);
   }
 
   Request marktodo(String venueId, [String text,
       Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'text': text,
     }, additional);
-    return new Request('POST', '$endpoint/$venueId/marktodo',
-        params);
+    return new Request('POST', '$endpoint/$venueId/marktodo', params);
   }
 
   Request proposeedit(String venueId, [String name, String address,
       String crossStreet, String city, String state, String zip, String phone,
       String ll, String primaryCategoryId, Map<String, String> additional]) {
-    Map<String, String> params = _combine({
+    Map params = _combine({
       'name': name,
       'address': address,
       'crossStreet': crossStreet,
@@ -241,7 +236,6 @@ class Venues{
       'll': ll,
       'primaryCategoryId': primaryCategoryId,
     }, additional);
-    return new Request('POST', '$endpoint/$venueId/proposeedit',
-        params);
+    return new Request('POST', '$endpoint/$venueId/proposeedit', params);
   }
 }

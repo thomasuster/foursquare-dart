@@ -12,15 +12,13 @@ main() {
   e.on.click.add((_) {
     fsq.login(REDIRECT_URI).then((__) {
       e.remove();
-      fsq.users.get().execute().then((userResp) {
-        window.alert('Hello ${userResp["response"]["user"]["firstName"]}');
+      fsq.users.get().execute().then((r1) {
+        window.alert('Hello ${r1["response"]["user"]["firstName"]}');
 
         // Example of building an arbitrary request not covered by a
         // pre-defined utility methods.
         new Request('GET', 'updates/notifications').execute()
-            .then((notificationsResp) {
-              window.alert('Notifications: ${notificationsResp["response"]["notifications"]["items"].length}');
-            });
+            .then((r2) => window.alert('Notifications: ${r2["response"]["notifications"]["items"].length}'));
       });
     });
   });

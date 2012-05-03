@@ -5,6 +5,7 @@
 #import('dart:uri');
 #import('http.dart');
 #import('oauth2.dart', prefix:'oauth2');
+#import('uri.dart');
 
 #source('users.dart');
 #source('venues.dart');
@@ -28,7 +29,7 @@ class Foursquare {
     _clientSecret = clientSecret;
   }
 
-  Future<Dynamic> login(String redirectUri) {
+  Future login(String redirectUri) {
     Completer c = new Completer();
 
     Future f = oauth2.login(_AUTH_URL, _clientId, redirectUri);
@@ -47,29 +48,37 @@ class Foursquare {
   String get version() => _version;
          set version(value) => _version = value;
 
+  /*
+   * Endpoints
+   */
   Users get users() => new Users();
   Venues get venues() => new Venues();
   Checkins get checkins() => new Checkins();
   Tips get tips() => new Tips();
 }
 
-Map<String, String> _combine(Map<String, String> first,
-    Map<String, String> second) {
+Map<String, String> _combine(Map<String, Dynamic> first,
+    Map<String, Dynamic> second) {
   if (first.isEmpty()) {
     return second;
   } else if (second.isEmpty()) {
     return first;
   }
   var m = <String>{};
-  var set = (String k, String v) => m[k] = v;
+  var set = (String k, String v) => m[k] = v.toString();
   first.forEach(set);
   second.forEach(set);
   return m;
 }
 
-class Request extends HttpRequest {
-  Request(String method, String path, [Map<String, String> params]) :
-      super(method, null,<String>{}) {
+class Request {
+  String method;
+  String path;
+  Map<String, String> params;
+
+  Request(this.method, this.path, [this.params]);
+
+  Future<Map> execute() {
     if (params == null) params = <String>{};
     if (_accessToken != null) {
       params['oauth_token'] = _accessToken;
@@ -77,12 +86,23 @@ class Request extends HttpRequest {
       params['client_id'] = _clientId;
       params['client_secret'] = _clientSecret;
     }
-    this.uri = new Uri.fromString(
-        '$_API_ENDPOINT$path${toParamsString(params)}');
-  }
-}
+    Uri uri = new Uri.fromString(
+        '$_API_ENDPOINT$path${_toParamsString(params)}');
 
-class FoursquareException implements Exception {
-  int code;
-  FoursquareException([this.code]);
+    Completer<Map> c = new Completer<Map>();
+    Future<HttpResponse> innerF = new HttpRequest(method, uri).execute();
+    innerF.handleException((e) => c.completeException(e));
+    innerF.then((HttpResponse r) => c.complete(JSON.parse(r.body)));
+
+    return c.future;
+  }
+
+  String _toParamsString(Map<String, String> p) {
+    if (p == null) return '';
+    List<String> parts = new List<String>();
+    p.forEach((String key, String val) {
+      parts.add('$key=${encodeURIComponent(val)}');
+    });
+    return '?' + Strings.join(parts, '&');
+  }
 }
