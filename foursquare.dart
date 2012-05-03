@@ -12,7 +12,7 @@
 #source('tips.dart');
 
 final String _AUTH_URL = 'https://foursquare.com/oauth2/authenticate';
-final String _API_ENDPOINT = 'https://api.foursquare.com/v2';
+final String _API_ENDPOINT = 'https://api.foursquare.com/v2/';
 String _version = '20120502';
 String _accessToken;
 String _clientId;
@@ -68,10 +68,17 @@ Map<String, String> _combine(Map<String, String> first,
 }
 
 class Request extends HttpRequest {
-  Request(String method, String path, [Map<String, String> params]) {
-    this.method = method;
+  Request(String method, String path, [Map<String, String> params]) :
+      super(method, null,<String>{}) {
+    if (params == null) params = <String>{};
+    if (_accessToken != null) {
+      params['oauth_token'] = _accessToken;
+    } else {
+      params['client_id'] = _clientId;
+      params['client_secret'] = _clientSecret;
+    }
     this.uri = new Uri.fromString(
-        '$_API_ENDPOINT/$path${toParamsString(params)}');
+        '$_API_ENDPOINT$path${toParamsString(params)}');
   }
 }
 

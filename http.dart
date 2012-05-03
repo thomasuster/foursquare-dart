@@ -1,12 +1,14 @@
+#library('HTTP utilities');
+
 #import('dart:html');
 #import('dart:json');
 #import('dart:uri');
 #import('uri.dart');
 
 class HttpRequest {
-  final String method;
-  final Uri uri;
-  final Map<String, String> headers;
+  String method;
+  Uri uri;
+  Map<String, String> headers;
 
   HttpRequest(String this.method, Uri this.uri,
       [Map<String, String> this.headers]);
@@ -41,6 +43,7 @@ class HttpException implements Exception {
 }
 
 String toParamsString(Map<String, String> params) {
+  if (params == null) return '';
   List<String> parts = new List<String>();
   params.forEach((String key, String val) {
     parts.add('$key=${encodeURIComponent(val)}');
