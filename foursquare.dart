@@ -127,7 +127,9 @@ class Request {
     XMLHttpRequest xhr = new XMLHttpRequest();
     xhr.open(_method, _url, true, null, null);
 
-    xhr.on.error.add((Event e) => completer.completeException(new NetworkException()));
+    xhr.on.error.add((Event e) {
+      completer.completeException(new NetworkException());
+    });
     xhr.on.loadEnd.add((Event e) {
       if (xhr.status >= 400) {
         completer.completeException(new HttpException(xhr.status));

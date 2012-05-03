@@ -12,33 +12,41 @@ class AuthError implements Exception {
   AuthError(this.error, this.errorDescription, this.errorUri);
 }
 
-AuthRequest _lastRequest;
+String _lastReqKey;
 Completer<String> _lastCompleter;
 Window _authWindow;
 
 bool addedCallback = false;
 
-Future<String> login(AuthRequest req, [Function successCallback,
-    Function errorCallback,
-    int windowHeight=600, int windowWidth=800]) {
-
+Future<String> login(String authUrl, String clientId, String redirectUri,
+    [List<String> scopes, String scopeDelimiter=' ', int windowHeight=600,
+    int windowWidth=800]) {
   if (!addedCallback) {
     addedCallback = true;
     window.on.message.add((MessageEvent e) {
       finish(e.data);
     }, false);
   }
-  String tokenStr = window.localStorage.$dom_getItem(req.asString());
+
+  _lastReqKey = '$clientId=====$scopes';
+  String tokenStr = window.localStorage.$dom_getItem(_lastReqKey);
   _TokenInfo info = tokenStr == null ? null :
       new _TokenInfo.fromString(tokenStr);
 
+  _lastCompleter = new Completer<String>();
   if (info == null || info._expires == null || _expiringSoon(info)) {
-    if (_authWindow != null && !_authWindow.closed && errorCallback != null) {
-      errorCallback(new AuthError('Authentication in progress', null, null));
+    if (_authWindow != null && !_authWindow.closed) {
+      _lastCompleter.completeException(
+          new AuthError('Authentication in progress', null, null));
     } else {
-      _lastRequest = req;
-      _lastCompleter = new Completer<String>();
-      window = window.open(req.toUrl(), 'authWindow',
+      String encodedClientId = encodeURIComponent(clientId);
+      String encodedRedirectUri = encodeURIComponent(redirectUri);
+      String scopesStr = scopes == null ? '' :
+          Strings.join(scopes, scopeDelimiter);
+      String url = '$authUrl?client_id=$encodedClientId&redirect_uri='
+          + '$encodedRedirectUri&response_type=token&scope=$scopesStr';
+
+      window = window.open(url, 'authWindow',
           'width=$windowWidth,height=$windowHeight');
     }
     return _lastCompleter.future;
@@ -98,7 +106,7 @@ void finish(String hash) {
     _TokenInfo info = new _TokenInfo();
     info._accessToken = values['access_token'];
     info._expires = values['expires'];
-    window.localStorage.$dom_setItem(_lastRequest.asString(), info.asString());
+    window.localStorage.$dom_setItem(_lastReqKey, info.asString());
 
     _lastCompleter.complete(values['access_token']);
   }
@@ -119,30 +127,6 @@ class _TokenInfo {
 
   String asString() {
     return '$_accessToken=====$_expires';
-  }
-}
-
-class AuthRequest {
-  final String _authUrl;
-  String clientId;
-  List<String> scopes;
-  String scopeDelimiter;
-  String redirectUri;
-
-  AuthRequest(this._authUrl, this.clientId, this.redirectUri, [this.scopes=null,
-      this.scopeDelimiter=' ']);
-
-  String toUrl() {
-    String encodedClientId = encodeURIComponent(clientId);
-    String encodedRedirectUri = encodeURIComponent(redirectUri);
-    String scopesStr = ''; // TODO scopes == null ? '' :
-        //Strings.join(scopes, scopeDelimiter);
-    return '$_authUrl?client_id=$encodedClientId&redirect_uri='
-        + '$encodedRedirectUri&response_type=token&scopes=$scopesStr';
-  }
-
-  String asString() {
-    return '$clientId=====$scopes';
   }
 }
 
