@@ -10,7 +10,7 @@ main() {
 
   Element e = document.query('#click');
   e.on.click.add((_) {
-    fsq.login(_REDIRECT_URI).then((_) {
+    fsq.login(_REDIRECT_URI).then((__) {
       e.remove();
       fsq.users.get().execute().then((userResp) {
         window.alert('Hello ${userResp["response"]["user"]["firstName"]}');
