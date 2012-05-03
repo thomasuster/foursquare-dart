@@ -58,7 +58,9 @@ class Foursquare {
 
   Request multi(List<Request> requests, [String method='GET']) {
     List<String> pathsAndQueries = [];
-    requests.forEach((Request r) => pathsAndQueries.add(r._getPathAndQuery(true)));
+    requests.forEach((Request r) {
+      pathsAndQueries.add(r._getPathAndQuery(true));
+    });
     String requestsStr = Strings.join(pathsAndQueries, ',');
     return new Request(method, 'multi', { 'requests': requestsStr });
   }
