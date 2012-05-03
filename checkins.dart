@@ -1,8 +1,5 @@
 class Checkins {
   final String endpoint = 'venues';
-  final RequestFactory _requestFactory;
-
-  Checkins(this._requestFactory);
 
   /*
    * General
@@ -13,7 +10,7 @@ class Checkins {
     Map<String, String> params = _combine({
       'signature': signature,
     }, additional);
-    return _requestFactory.build('GET', '$endpoint/$checkinId', params);
+    return new Request('GET', '$endpoint/$checkinId', params);
   }
 
   Request recent([String ll, int limit, int afterTimestamp,
@@ -23,7 +20,7 @@ class Checkins {
       'limit': limit.toString(),
       'afterTimestamp': afterTimestamp.toString(),
     }, additional);
-    return _requestFactory.build('GET', '$endpoint/recent', params);
+    return new Request('GET', '$endpoint/recent', params);
   }
 
   /*
@@ -35,7 +32,7 @@ class Checkins {
     Map<String, String> params = _combine({
       'text': text,
     }, additional);
-    return _requestFactory.build('POST', '$endpoint/$checkinId/addcomment',
+    return new Request('POST', '$endpoint/$checkinId/addcomment',
         params);
   }
 
@@ -44,7 +41,7 @@ class Checkins {
     Map<String, String> params = _combine({
       'commentId': commentId,
     }, additional);
-    return _requestFactory.build('POST', '$endpoint/$checkinId/deletecomment',
+    return new Request('POST', '$endpoint/$checkinId/deletecomment',
         params);
   }
 }

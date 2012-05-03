@@ -17,7 +17,7 @@ main() {
 
         // Example of building an arbitrary request not covered by a
         // pre-defined utility methods.
-        fsq.requestFactory.build('GET', 'updates/notifications').execute()
+        new Request('GET', 'updates/notifications').execute()
             .then((notificationsResp) {
               window.alert('Notifications: ${notificationsResp["response"]["notifications"]["items"].length}');
             });

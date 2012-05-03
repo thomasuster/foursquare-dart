@@ -1,26 +1,23 @@
 class Users {
   final String endpoint = 'users';
-  final RequestFactory _requestFactory;
-
-  Users(this._requestFactory);
 
   /*
    * General
    */
 
   Request get([String userId='self', Map<String, String> additional]) {
-    return _requestFactory.build('GET', '$endpoint/$userId', additional);
+    return new Request('GET', '$endpoint/$userId', additional);
   }
 
   Request leaderboard([int neighbors, Map<String, String> additional]) {
     Map<String, String> params = _combine({
       'neighbors': neighbors.toString(),
     }, additional);
-    return _requestFactory.build('GET', '$endpoint/leaderboard', params);
+    return new Request('GET', '$endpoint/leaderboard', params);
   }
 
   Request requests([Map<String, String> additional]) {
-    return _requestFactory.build('GET', '$endpoint/requests', additional);
+    return new Request('GET', '$endpoint/requests', additional);
   }
 
   Request search([List<String> phone, List<String> email,
@@ -34,7 +31,7 @@ class Users {
       'fbid': Strings.join(fbid, ','),
       'name': name,
     }, additional);
-    return _requestFactory.build('GET', '$endpoint', params);
+    return new Request('GET', '$endpoint', params);
   }
 
   /*
@@ -42,7 +39,7 @@ class Users {
    */
 
   Request badges([String userId='self', Map<String, String> additional]) {
-    return _requestFactory.build('GET', '$endpoint/$userId/badges',
+    return new Request('GET', '$endpoint/$userId/badges',
         additional);
   }
 
@@ -55,7 +52,7 @@ class Users {
       'afterTimestamp': afterTimestamp.toString(),
       'beforeTimestamp': beforeTimestamp.toString(),
     }, additional);
-    return _requestFactory.build('GET', '$endpoint/$userId/checkins', params);
+    return new Request('GET', '$endpoint/$userId/checkins', params);
   }
 
   Request friends([String userId='self', int limit, int offset,
@@ -64,7 +61,7 @@ class Users {
       'limit': limit.toString(),
       'offset': offset.toString(),
     }, additional);
-    return _requestFactory.build('GET', '$endpoint/$userId/friends', params);
+    return new Request('GET', '$endpoint/$userId/friends', params);
   }
 
   Request lists([String userId='self', String group, String ll,
@@ -73,12 +70,12 @@ class Users {
       'group': group,
       'll': ll,
     }, additional);
-    return _requestFactory.build('GET', '$endpoint/$userId/lists', params);
+    return new Request('GET', '$endpoint/$userId/lists', params);
   }
 
   Request mayorships([String userId='self',
       Map<String, String> additional]) {
-    return _requestFactory.build('GET', '$endpoint/$userId/mayorships',
+    return new Request('GET', '$endpoint/$userId/mayorships',
         additional);
   }
 
@@ -88,7 +85,7 @@ class Users {
       'limit': limit.toString(),
       'offset': offset.toString(),
     }, additional);
-    return _requestFactory.build('GET', '$endpoint/$userId/photos', params);
+    return new Request('GET', '$endpoint/$userId/photos', params);
   }
 
   Request tips([String userId='self', String sort, String ll, int limit,
@@ -99,7 +96,7 @@ class Users {
       'limit': limit.toString(),
       'offset': offset.toString(),
     }, additional);
-    return _requestFactory.build('GET', '$endpoint/$userId/tips', params);
+    return new Request('GET', '$endpoint/$userId/tips', params);
   }
 
   Request todos([String userId='self', String sort, String ll,
@@ -108,7 +105,7 @@ class Users {
       'sort': sort,
       'll': ll,
     }, additional);
-    return _requestFactory.build('GET', '$endpoint/$userId/todos', params);
+    return new Request('GET', '$endpoint/$userId/todos', params);
   }
 
   Request venuehistory([String userId='self', int beforeTimestamp,
@@ -118,7 +115,7 @@ class Users {
       'afterTimestamp': afterTimestamp.toString(),
       'categoryId': categoryId,
     }, additional);
-    return _requestFactory.build('GET', '$endpoint/$userId/venuehistory',
+    return new Request('GET', '$endpoint/$userId/venuehistory',
         params);
   }
 
@@ -127,16 +124,16 @@ class Users {
    */
 
   Request approve(String userId, [Map<String, String> additional]) {
-    return _requestFactory.build('POST', '$endpoint/$userId/approve',
+    return new Request('POST', '$endpoint/$userId/approve',
         additional);
   }
 
   Request deny(String userId, [Map<String, String> additional]) {
-    return _requestFactory.build('POST', '$endpoint/$userId/deny', additional);
+    return new Request('POST', '$endpoint/$userId/deny', additional);
   }
 
   Request request(String userId, [Map<String, String> additional]) {
-    return _requestFactory.build('POST', '$endpoint/$userId/request',
+    return new Request('POST', '$endpoint/$userId/request',
         additional);
   }
 
@@ -145,16 +142,16 @@ class Users {
     Map<String, String> params = _combine({
       'value': value.toString(),
     }, additional);
-    return _requestFactory.build('POST', '$endpoint/$userId/setpings', params);
+    return new Request('POST', '$endpoint/$userId/setpings', params);
   }
 
   Request unfriend(String userId, [Map<String, String> additional]) {
-    return _requestFactory.build('POST', '$endpoint/$userId/unfriend',
+    return new Request('POST', '$endpoint/$userId/unfriend',
         additional);
   }
 
   // TODO(jason): Support file upload for photo parameter.
   Request update([Map<String, String> additional]) {
-    return _requestFactory.build('POST', '$endpoint/self/update', additional);
+    return new Request('POST', '$endpoint/self/update', additional);
   }
 }
