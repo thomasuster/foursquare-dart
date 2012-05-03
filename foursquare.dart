@@ -9,6 +9,8 @@
 #source('venues.dart');
 #source('checkins.dart');
 
+final String _AUTH_URL = 'https://foursquare.com/oauth2/authenticate';
+
 class Foursquare {
   RequestFactory _requestFactory;
   String _clientId;
@@ -24,16 +26,14 @@ class Foursquare {
   }
 
   Future<Dynamic> login(String redirectUri) {
-    Completer<Dynamic> c = new Completer<Dynamic>();
+    Completer c = new Completer();
 
-    oauth2.AuthRequest req = new oauth2.AuthRequest(
-        'https://foursquare.com/oauth2/authenticate', _clientId, redirectUri);
-    Future<String> future = oauth2.login(req);
-    future.then((String accessToken) {
-      this.accessToken = accessToken;
+    Future f = oauth2.login(_AUTH_URL, _clientId, redirectUri);
+    f.handleException((Exception e) => c.completeException(e));
+    f.then((token) {
+      this.accessToken = token;
       c.complete(null);
     });
-    future.handleException((Exception e) => c.completeException(e));
 
     return c.future;
   }
@@ -122,17 +122,15 @@ class Request {
   Request(this._method, this._url);
 
   Future<Map> execute() {
-
-    final completer = new Completer();
+    Completer<Map> completer = new Completer<Map>();
     XMLHttpRequest xhr = new XMLHttpRequest();
-    xhr.open(_method, _url, true, null, null);
-
+    xhr.open(_method, _url);
     xhr.on.error.add((Event e) {
-      completer.completeException(new NetworkException());
+      completer.completeException(new FoursquareException());
     });
     xhr.on.loadEnd.add((Event e) {
       if (xhr.status >= 400) {
-        completer.completeException(new HttpException(xhr.status));
+        completer.completeException(new FoursquareException(xhr.status));
       } else {
         completer.complete(JSON.parse(xhr.responseText));
       }
@@ -143,11 +141,7 @@ class Request {
   }
 }
 
-class NetworkException implements Exception {
-  NetworkException();
-}
-
-class HttpException implements Exception {
+class FoursquareException implements Exception {
   int code;
-  HttpException(int this.code);
+  FoursquareException([this.code]);
 }
