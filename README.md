@@ -58,7 +58,7 @@ fsq.multi([fsq.users.get('2068'),
 
 ```
 
-[Sample Application](https://foursquare-dart.googlecode.com/git/sample.html)
+[Sample Application](http://foursquare-dart.googlecode.com/git/sample.html)
 ====================
 
 
