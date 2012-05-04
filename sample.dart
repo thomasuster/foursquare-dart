@@ -25,9 +25,13 @@ main() {
       });
 
       // Example of making a multi request consisting of three batched requests.
-      fsq.multi([fsq.users.get(), fsq.users.get('32'), fsq.users.get('33')])
+      fsq.multi([fsq.users.get(),
+                 fsq.venues.search(ll: '40.7013,-73.7074'),
+                 fsq.checkins.recent(limit: 3)])
           .execute().then((r3) {
-            log('Multi responses: ${r3["response"]["responses"].length}');
+            if (r3['response']['responses'].length == 3) {
+              log('Multi request successful');
+            }
           });
     });
   });

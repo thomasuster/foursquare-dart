@@ -58,9 +58,9 @@ class Foursquare {
 
   Request multi(List<Request> requests, [String method='GET']) {
     List<String> pathsAndQueries = [];
-    requests.forEach((Request r) {
+    for (Request r in requests) {
       pathsAndQueries.add(r._getPathAndQuery(true));
-    });
+    }
     String requestsStr = Strings.join(pathsAndQueries, ',');
     return new Request(method, 'multi', { 'requests': requestsStr });
   }
@@ -68,9 +68,9 @@ class Foursquare {
 
 Map<String, String> _combine(Map<String, Dynamic> first,
     Map<String, Dynamic> second) {
-  if (first.isEmpty()) {
+  if (first == null || first.isEmpty()) {
     return second;
-  } else if (second.isEmpty()) {
+  } else if (second == null || second.isEmpty()) {
     return first;
   }
   var m = <String>{};
@@ -107,9 +107,11 @@ class Request {
 
   String _toParamsString(Map<String, String> p) {
     if (p == null) return '';
-    List<String> parts = new List<String>();
+    List<String> parts = <String>[];
     p.forEach((String key, String val) {
-      parts.add('$key=${encodeURIComponent(val)}');
+      if (key != null && val != null) {
+        parts.add('$key=${encodeURIComponent(val.toString())}');
+      }
     });
     return '?' + Strings.join(parts, '&');
   }

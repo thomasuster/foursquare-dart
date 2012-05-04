@@ -1,5 +1,5 @@
 class Checkins {
-  final String endpoint = 'venues';
+  final String endpoint = 'checkins';
 
   /*
    * General
