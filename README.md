@@ -57,3 +57,15 @@ fsq.multi([fsq.users.get('2068'),
     });
 
 ```
+
+[Sample Application](https://foursquare-dart.googlecode.com/git/sample.html)
+====================
+
+
+TODOs:
+======
+
+- Add helper classes for the rest of the endpoints
+  - Make a decision about its usefulness and design
+- Split the OAuth 2.0 library (and maybe the HTTP helpers?) into a separate project
+  - Describe how OAuth works, how to set it up
