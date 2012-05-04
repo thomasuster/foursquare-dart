@@ -952,6 +952,9 @@ HashMapImplementation.prototype.$index = function(key) {
   if (index < (0)) return null;
   return this._values.$index(index);
 }
+HashMapImplementation.prototype.isEmpty = function() {
+  return this._numberOfEntries == (0);
+}
 HashMapImplementation.prototype.get$length = function() {
   return this._numberOfEntries;
 }
@@ -1086,6 +1089,9 @@ LinkedHashMapImplementation.prototype.containsKey = function(key) {
 }
 LinkedHashMapImplementation.prototype.get$length = function() {
   return this._map.get$length();
+}
+LinkedHashMapImplementation.prototype.isEmpty = function() {
+  return this.get$length() == (0);
 }
 LinkedHashMapImplementation.prototype.toString = function() {
   return Maps.mapToString(this);
@@ -2826,6 +2832,9 @@ $dynamic("forEach").Storage = function(f) {
 $dynamic("get$length").Storage = function() {
   return this.get$$$dom_length();
 }
+$dynamic("isEmpty").Storage = function() {
+  return this.key((0)) == null;
+}
 $dynamic("get$$$dom_length").Storage = function() {
   return this.length;
 }
@@ -3525,12 +3534,18 @@ Foursquare.prototype.set$accessToken = function(value) {
 Foursquare.prototype.get$users = function() {
   return new Users();
 }
+Foursquare.prototype.get$venues = function() {
+  return new Venues();
+}
+Foursquare.prototype.get$checkins = function() {
+  return new Checkins();
+}
 Foursquare.prototype.multi = function(requests, method) {
   var pathsAndQueries = [];
-  requests.forEach((function (r) {
+  for (var $$i = requests.iterator(); $$i.hasNext(); ) {
+    var r = $$i.next();
     pathsAndQueries.add(r._getPathAndQuery(true));
-  })
-  );
+  }
   var requestsStr = Strings.join(pathsAndQueries, ",");
   return new Request(method, "multi", _map(["requests", requestsStr]));
 }
@@ -3556,9 +3571,11 @@ Request.prototype._getPathAndQuery = function(multi) {
 }
 Request.prototype._toParamsString = function(p) {
   if (p == null) return "";
-  var parts = new Array();
+  var parts = [];
   p.forEach((function (key, val) {
-    parts.add(("" + key + "=" + encodeURIComponent$(val)));
+    if (key != null && val != null) {
+      parts.add(("" + key + "=" + encodeURIComponent$(val.toString())));
+    }
   })
   );
   return $add$("?", Strings.join(parts, "&"));
@@ -3584,10 +3601,48 @@ function Users() {
 Users.prototype.get$_ = function(userId, additional) {
   return new Request("GET", ("" + this.endpoint + "/" + userId), additional);
 }
+// ********** Code for Venues **************
+function Venues() {
+  this.endpoint = "venues";
+}
+Venues.prototype.add = function(address, crossStreet, city, state, zip, phone, twitter, ll, primaryCategoryId, description, url, ignoreDuplicates, ignoreDuplicatesKey, additional) {
+  var params = _combine(_map(["address", address, "crossStreet", crossStreet, "city", city, "state", state, "zip", zip, "phone", phone, "twitter", twitter, "ll", ll, "primaryCategoryId", primaryCategoryId, "description", description, "url", url, "ignoreDuplicates", ignoreDuplicates, "ignoreDuplicatesKey", ignoreDuplicatesKey]), additional);
+  return new Request("POST", ("" + this.endpoint + "/add"), params);
+}
+Venues.prototype.search = function(ll, near, llAcc, alt, altAcc, query, limit, intent, radius, sw, ne, categoryId, url, providerId, linkedId, additional) {
+  var params = _combine(_map(["ll", ll, "near", near, "llAcc", llAcc, "alt", alt, "altAcc", altAcc, "query", query, "limit", limit, "intent", intent, "radius", radius, "sw", sw, "ne", ne, "categoryId", categoryId, "url", url, "providerId", providerId, "linkedId", linkedId]), additional);
+  return new Request("GET", ("" + this.endpoint + "/search"), params);
+}
+Venues.prototype.add$1 = Venues.prototype.add;
+// ********** Code for Checkins **************
+function Checkins() {
+  this.endpoint = "checkins";
+}
+Checkins.prototype.recent = function(ll, limit, afterTimestamp, additional) {
+  var params = _combine(_map(["ll", ll, "limit", limit, "afterTimestamp", afterTimestamp]), additional);
+  return new Request("GET", ("" + this.endpoint + "/recent"), params);
+}
 // ********** Code for top level **************
 var _accessToken;
 var _clientId;
 var _clientSecret;
+function _combine(first, second) {
+  if (first == null || first.isEmpty()) {
+    return second;
+  }
+  else if (second == null || second.isEmpty()) {
+    return first;
+  }
+  var m = new HashMapImplementation();
+  var set = (function (k, v) {
+    var $0;
+    return (m.$setindex(k, ($0 = v.toString())), $0);
+  })
+  ;
+  first.forEach(set);
+  second.forEach(set);
+  return m;
+}
 //  ********** Library sample **************
 // ********** Code for top level **************
 function main() {
@@ -3604,8 +3659,10 @@ function main() {
         log(("Notifications: " + r2.$index("response").$index("notifications").$index("count")));
       })
       );
-      fsq.multi([fsq.get$users().get$_("self"), fsq.get$users().get$_("32"), fsq.get$users().get$_("33")], "GET").execute().then((function (r3) {
-        log(("Multi responses: " + r3.$index("response").$index("responses").get$length()));
+      fsq.multi([fsq.get$users().get$_("self"), fsq.get$venues().search("40.7013,-73.7074"), fsq.get$checkins().recent(null, (3))], "GET").execute().then((function (r3) {
+        if (r3.$index("response").$index("responses").get$length() == (3)) {
+          log("Multi request successful");
+        }
       })
       );
     })
