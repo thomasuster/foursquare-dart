@@ -382,16 +382,16 @@ BadNumberFormatException.prototype.toString = function() {
   return ("BadNumberFormatException: '" + this._s + "'");
 }
 // ********** Code for NullPointerException **************
-function NullPointerException(functionName, arguments) {
+function NullPointerException(functionName, args) {
   this.functionName = functionName;
-  this.arguments = arguments;
+  this.args = args;
 }
 NullPointerException.prototype.toString = function() {
   if (this.functionName == null) {
     return this.get$exceptionName();
   }
   else {
-    return (("" + this.get$exceptionName() + " : method: '" + this.functionName + "'\n") + "Receiver: null\n" + ("Arguments: " + this.arguments));
+    return (("" + this.get$exceptionName() + " : method: '" + this.functionName + "'\n") + "Receiver: null\n" + ("Arguments: " + this.args));
   }
 }
 NullPointerException.prototype.get$exceptionName = function() {
