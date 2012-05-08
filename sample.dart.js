@@ -3659,8 +3659,8 @@ function main() {
         log(("Notifications: " + r2.$index("response").$index("notifications").$index("count")));
       })
       );
-      fsq.multi([fsq.get$users().get$_("self"), fsq.get$venues().search("40.7013,-73.7074"), fsq.get$checkins().recent(null, (3))], "GET").execute().then((function (r3) {
-        if (r3.$index("response").$index("responses").get$length() == (3)) {
+      fsq.multi([fsq.get$users().get$_("self"), fsq.get$venues().search("40.7013,-73.7074"), fsq.get$checkins().recent(null, (3)), new Request("GET", "updates/notifications", _map(["foo", "bar"]))], "GET").execute().then((function (r3) {
+        if (r3.$index("response").$index("responses").get$length() == (4)) {
           log("Multi request successful");
         }
       })

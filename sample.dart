@@ -27,9 +27,11 @@ main() {
       // Example of making a multi request consisting of three batched requests.
       fsq.multi([fsq.users.get(),
                  fsq.venues.search(ll: '40.7013,-73.7074'),
-                 fsq.checkins.recent(limit: 3)])
+                 fsq.checkins.recent(limit: 3),
+                 new Request('GET', 'updates/notifications',
+                     { 'foo': 'bar' })])
           .execute().then((r3) {
-            if (r3['response']['responses'].length == 3) {
+            if (r3['response']['responses'].length == 4) {
               log('Multi request successful');
             }
           });
