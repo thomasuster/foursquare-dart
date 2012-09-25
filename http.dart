@@ -1,6 +1,6 @@
 #library('HTTP utilities');
 
-#import('dart:html');
+#import('dart:html', prefix:'html');
 #import('dart:uri');
 
 class HttpRequest {
@@ -13,17 +13,17 @@ class HttpRequest {
 
   Future<HttpResponse> execute([String body]) {
     Completer<HttpResponse> completer = new Completer<HttpResponse>();
-    XMLHttpRequest xhr = new XMLHttpRequest();
+    html.HttpRequest xhr = new html.HttpRequest();
     xhr.open(method, uri.toString());
 
     if (headers != null) {
       headers.forEach((k, v) => xhr.setRequestHeader(k, v));
     }
 
-    xhr.on.error.add((Event e) {
+    xhr.on.error.add((html.Event e) {
       completer.completeException(new HttpException());
     });
-    xhr.on.loadEnd.add((Event e) {
+    xhr.on.loadEnd.add((html.Event e) {
       if (xhr.status >= 400) {
         completer.completeException(new HttpException(xhr.status));
       } else {

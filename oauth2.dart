@@ -3,6 +3,7 @@
 #import('dart:html');
 #import('dart:json');
 #import('uri.dart');
+#import('dart:math');
 
 class AuthError implements Exception {
   String error;
@@ -44,7 +45,7 @@ Future<String> login(String authUrl, String clientId, String redirectUri,
       String scopesStr = scopes == null ? '' :
           Strings.join(scopes, scopeDelimiter);
       String url = '$authUrl?client_id=$encodedClientId&redirect_uri='
-          + '$encodedRedirectUri&response_type=token&scope=$scopesStr';
+          .concat('$encodedRedirectUri&response_type=token&scope=$scopesStr');
 
       _authWindow = window.open(url, 'authWindow',
           'width=$windowWidth,height=$windowHeight');
@@ -61,8 +62,8 @@ bool _expiringSoon(_TokenInfo info) {
   } else {
     window.console.log(info._expires);
     window.console.log(info._expires == 'null');
-    int expires = Math.parseInt(info._expires == null ? '0' : info._expires);
-    int tenMinutesFromNow = new Date.now().milliseconds + (10 * 60 * 1000);
+    int expires = parseInt(info._expires == null ? '0' : info._expires);
+    int tenMinutesFromNow = new Date.now().millisecond + (10 * 60 * 1000);
     return expires < tenMinutesFromNow;
   }
 }

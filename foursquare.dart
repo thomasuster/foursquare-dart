@@ -3,7 +3,7 @@
 #import('dart:html');
 #import('dart:json');
 #import('dart:uri');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 #import('oauth2.dart', prefix:'oauth2');
 #import('uri.dart');
 
@@ -113,16 +113,16 @@ class Request {
         parts.add('$key=${encodeURIComponent(val.toString())}');
       }
     });
-    return '?' + Strings.join(parts, '&');
+    return "?${Strings.join(parts, '&')}";
   }
 
   Future<Map> execute() {
     Uri uri = new Uri.fromString('$_API_ENDPOINT${_getPathAndQuery()}');
 
     Completer<Map> c = new Completer<Map>();
-    Future<HttpResponse> innerF = new HttpRequest(_method, uri).execute();
+    Future<http.HttpResponse> innerF = new http.HttpRequest(_method, uri).execute();
     innerF.handleException((e) => c.completeException(e));
-    innerF.then((HttpResponse r) => c.complete(JSON.parse(r.body)));
+    innerF.then((http.HttpResponse r) => c.complete(JSON.parse(r.body)));
 
     return c.future;
   }

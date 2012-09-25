@@ -28,9 +28,9 @@
  */
 String encodeURI(text) {
   StringBuffer encodedText = new StringBuffer();
-  final String whiteList = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
-                           'abcdefghijklmnopqrstuvwxyz' +
-                           '0123456789-_.!~*\'()#;,/?:@&=+\$';
+  final String whiteList = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.concat(
+                           'abcdefghijklmnopqrstuvwxyz').concat(
+                           '0123456789-_.!~*\'()#;,/?:@&=+\$');
   final String hexDigits = '0123456789ABCDEF';
   for (int i = 0; i < text.length; i++) {
     if (whiteList.indexOf(text[i]) != -1) {
